@@ -1,0 +1,13 @@
+; 不一定需要是符号. 目前的写法, 都能处理
+(define (flatten slist)
+  (if (null? slist)
+      '()
+      (let ((car_slist (car slist)))
+        (if (list? car_slist)
+            (append (flatten car_slist) 
+                    (flatten (cdr slist)))
+            (cons car_slist (flatten (cdr slist)))))))
+(flatten '((a) () (b ()) () (c)))
+(flatten '((a b) c (((d)) e)))
+(flatten '(a b (() (c))))
+(flatten '(a b c m))
