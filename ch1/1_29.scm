@@ -17,3 +17,15 @@
 (equal? (sort '(1 2 3 4)) '(1 2 3 4))
 (equal? (sort '(4 3 2 1)) '(1 2 3 4))
 (equal? (sort '(8 2 5 2 3)) '(2 2 3 5 8))
+
+; 改成实现成iterative process:
+(define (sort-v2 loi)
+  (define (sort-aux sorted_list remaining)
+    (if (null? remaining)
+        sorted_list
+        (sort-aux (insert (car remaining) sorted_list) (cdr remaining))))
+  (sort-aux '() loi))
+(equal? (sort-v2 '()) '())
+(equal? (sort-v2 '(1 2 3 4)) '(1 2 3 4))
+(equal? (sort-v2 '(4 3 2 1)) '(1 2 3 4))
+(equal? (sort-v2 '(8 2 5 2 3)) '(2 2 3 5 8))
