@@ -1,0 +1,12 @@
+(load "./ch1/1_31.scm")
+(define (double-tree node)
+  (if (leaf? node)
+      (* node 2)
+      (list (car node)
+            (double-tree (lson node))
+            (double-tree (rson node)))))
+
+(define leaf_node_31_1 (leaf 2))
+(define leaf_node_31_2 (leaf 4))
+(define interior_node_31_1 (interior-node 'a leaf_node_1 leaf_node_2))
+(double-tree interior_node_31_1)
