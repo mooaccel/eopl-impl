@@ -17,6 +17,14 @@
   dispatch)
 
 ; todo, why? 为啥下面这么定义不行?
+; 因为返回的lambda应该是这样:
+; 用匿名lambda和有名函数都行.等价的
+;  (lambda (mt)
+;      (cond ((eqv? mt 'apply-env)
+;              apply-env-aux)
+;            ((eqv? mt 'empty-env?)
+;              #f)
+;            (else (error "not exist this method in extend-env"))))
 ;(define (extend-env saved-var saved-val saved-env)
 ;  (define (apply-env-aux search_var)
 ;   (if (eqv? search_var saved-var)
@@ -24,7 +32,7 @@
 ;       ((saved-env 'apply-env) search_var)))
 ;       ;(apply-env saved-env search_var)))  可以吗?
 ;
-;  ; 必须返回lambda?
+; 下面的多定义了一对括号
 ;  (lambda (mt) (
 ;      (cond ((eqv? mt 'apply-env)
 ;              apply-env-aux)
