@@ -7,6 +7,8 @@
             (error "empty-stack err, mt = " mt))
           ((eqv? mt 'pop)
             (error "empty-stack err, mt = " mt))
+          ((eqv? mt 'empty-stack?)
+            #t)
           (else (error "empty-stack don't support this mt" mt)))))
 
 ; 制造lambda
@@ -16,6 +18,8 @@
             var)
           ((eqv? mt 'pop)
             stk)
+          ((eqv? mt 'empty-stack?)
+            #f)
           (else (error "push don't support this mt" mt)))))
 
 (define (pop stk)
@@ -25,8 +29,8 @@
   (stk 'top))
 
 ; ; todo 怎么定义?
-; (define (empty-stack? stk)
-;   ())
+(define (empty-stack? stk)
+  (stk 'empty-stack?))
 
 
 (define empty_stk (empty-stack))
@@ -49,3 +53,7 @@
 ; 还可以这样...
 (equal? (top x2_2) 20)
 (equal? (top (pop x2_2)) 1)
+(empty-stack? empty_stk)
+(empty-stack? x1)
+(empty-stack? x2)
+(empty-stack? x3)
