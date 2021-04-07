@@ -36,4 +36,4 @@ env2
 (equal? (apply-env env2 'y) 8)
 (equal? (apply-env env2 'd) 6)
 (equal? (apply-env env2 'x) 7)
-(apply-env env2 'mm)
+;(apply-env env2 'mm)
