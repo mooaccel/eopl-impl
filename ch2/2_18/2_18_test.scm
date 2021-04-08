@@ -1,0 +1,10 @@
+(load "./ch2/2_18/2_18.scm")
+
+(number->sequence 7)
+(current-element '(6 (5 4 3 2 1) (7 8 9)))
+(move-to-left '(6 (5 4 3 2 1) (7 8 9)))
+(move-to-left '(6 () (7 8 9)))
+(move-to-right '(6 (5 4 3 2 1) (7 8 9)))
+(move-to-right '(6 (5 4 3 2 1) ()))
+(insert-to-left 13 '(6 (5 4 3 2 1) (7 8 9)))
+(insert-to-right 13 '(6 (5 4 3 2 1) (7 8 9)))
