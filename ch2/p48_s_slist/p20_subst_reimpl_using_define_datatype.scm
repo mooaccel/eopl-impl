@@ -81,3 +81,6 @@
 (newline)
 ; 改变了内部表示
 (eopl:pretty-print (subst-v2 'a 'b slist_01))
+
+
+; 递归型数据结构, 自然很容易地可以由递归程序负责处理, 每一层procedure只处理一层的数据
