@@ -24,3 +24,16 @@
    (else
     (or (occurs-free? search_var (app-exp->rator exp))
         (occurs-free? search_var (app-exp->rand exp)))))))
+
+
+; EOPL p46 再次重写occurs-free?
+(define occurs-free?
+  (lambda (search-var exp) 
+    (cases lc-exp exp   ; 这是什么语法?
+      (var-exp (var) (eqv? var search-var)) 
+      (lambda-exp (bound-var body)   ; bound-var, body自己进行binding? 
+        (and (not (eqv? search-var bound-var)) 
+             (occurs-free? search-var body))) 
+      (app-exp (rator rand) 
+        (or (occurs-free? search-var rator) 
+            (occurs-free? search-var rand))))))
