@@ -3,7 +3,7 @@
 (define (identifier? var)
   (symbol? var))
 
-; LcExp ::= Identiﬁer
+; LcExp ::= Identifier
 ;       ::= (lambda (Identifier) LcExp) 
 ;       ::= (LcExp LcExp)
 (define-datatype lc-exp lc-exp?
