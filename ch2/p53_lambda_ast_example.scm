@@ -14,13 +14,13 @@
  (lambda (datum)
   (cond
    ((symbol? datum)
-    (var-exp datum))
+      (var-exp datum))
    ((pair? datum)
-    (if (eqv? (car datum) 'lambda)
-     (lambda-exp (car (cadr datum)) (parse-expression (caddr datum)))
-     (app-exp (parse-expression (car datum)) (parse-expression (cadr datum)))))
+      (if (eqv? (car datum) 'lambda)
+          (lambda-exp (car (cadr datum)) (parse-expression (caddr datum)))
+          (app-exp (parse-expression (car datum)) (parse-expression (cadr datum)))))
    (else
-    (report-invalid-concrete-syntax datum)))))
+      (report-invalid-concrete-syntax datum)))))
 
 (define (report-invalid-concrete-syntax datum)
   (eopl:error 'report-invalid-concrete-syntax "invalid concrete syntax ~s" datum))
