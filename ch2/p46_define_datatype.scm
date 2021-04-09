@@ -76,3 +76,16 @@
         (eopl:pretty-print rand)))
          ;         (or (occurs-free? search-var rator)
          ;             (occurs-free? search-var rand)))))
+
+(display "=====")
+(newline)
+(define eopl_p52_lambda_exp_example (lambda-exp 'x
+                                           (app-exp (var-exp 'f)
+                                                    (app-exp (var-exp 'f)
+                                                             (var-exp 'x)))))
+(eopl:pretty-print eopl_p52_lambda_exp_example)
+;#(struct:lambda-exp
+;  x
+;  #(struct:app-exp
+;    #(struct:var-exp f)
+;    #(struct:app-exp #(struct:var-exp f) #(struct:var-exp x))))
