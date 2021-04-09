@@ -7,7 +7,7 @@
 
 (define (identifier? var)
   (symbol? var))
-; todo
+; todo, 可能需要改变
 (define (scheme-val? var)
   #t)
 
