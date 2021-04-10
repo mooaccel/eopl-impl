@@ -55,11 +55,11 @@
 ;;;;;;;;;;;;;;;; sllgen boilerplate ;;;;;;;;;;;;;;;;
 ; p386页
 ; (sllgen:make-define-datatypes the-lexical-spec the-grammar)
-; 能看生成的是什么define-datatypes.
+; 能看生成的是什么define-datatype.
 (eopl:pretty-print (sllgen:list-define-datatypes the-lexical-spec the-grammar))
 ; 除了var-exp的(var-exp (var-exp15 symbol?))有点不一样, why?todo
 
-; 暂时先不借助sllgen:make-define-datatypes生成define-datatypes. 出于初学原因.
+; 暂时先不借助sllgen:make-define-datatypes生成define-datatype. 出于初学原因.
 
 (define scan&parse
   (sllgen:make-string-parser the-lexical-spec the-grammar))

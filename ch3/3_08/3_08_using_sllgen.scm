@@ -74,7 +74,7 @@
     (expression ("let" identifier "=" expression "in" expression) let-exp)
     ))
 
-; 暂时先不借助sllgen:make-define-datatypes生成define-datatypes. 出于初学原因.
+; 暂时先不借助sllgen:make-define-datatypes生成define-datatype. 出于初学原因.
 ; 只想使用scan&parse的能力.
 (define scan&parse
   (sllgen:make-string-parser the-lexical-spec the-grammar))
