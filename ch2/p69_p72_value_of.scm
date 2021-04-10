@@ -127,7 +127,7 @@
 (define value-of
   (lambda (exp env)
     (cases expression exp
-      (const-exp (num) 
+      (const-exp (num)        ; const-exp这种名字既能当constructor, 又能当cases里的匹配符. 估计define-datatype底下就这么实现的
         (num-val num))
       (var-exp (var) 
         (apply-env env var))  ; apply-env返回的value已经是内部表示了, num-val/bool-val这种了
@@ -150,7 +150,19 @@
                 (value-of exp3 env))))
       (let-exp (var exp1 body)
         (let ((val1 (value-of exp1 env)))
-          (value-of body (extend-env var val1)))))))
+          (value-of body (extend-env var val1 env)))))))
+
+; just for debug let-exp
+;      (let-exp (var exp1 body)
+;        (let ((val1 (value-of exp1 env)))
+;          (newline)
+;          (display "[===in let-exp")
+;          (newline)
+;          (eopl:pretty-print var)
+;          (eopl:pretty-print env)
+;          (display "          =======]")
+;          (newline)
+;          (value-of body (extend-env var val1 env)))))))
 
 ; 测试zero?
 ; (display (zero? 0))  ; #t
@@ -161,3 +173,107 @@
 (newline)
 (eopl:pretty-print test_exp_01)
 (eopl:pretty-print (value-of test_exp_01 init_env_01))
+
+
+; eopl, p64, Figure 3.3 A simple calculation using the specification
+
+; <<-(-(x,3), -(v,i))>> 这个ast即下面这个
+(define p64_ast_example_01
+  (diff-exp (diff-exp (var-exp 'x)
+                      (const-exp 3))
+            (diff-exp (var-exp 'v)
+                      (var-exp 'i))))
+(eopl:pretty-print "(value-of p64_ast_example_01 init_env_01) = ")
+(eopl:pretty-print (value-of p64_ast_example_01 init_env_01))
+
+
+; eopl, p66, Figure 3.4 A simple calculation for a conditional expression
+; [x= ⌈ 33 ⌉,y= ⌈ 22 ⌉ ].
+(define p66_ast_example_01_init_env
+    (extend-env 'x 
+                (num-val 33) 
+                (extend-env 'y
+                            (num-val 22) 
+                            (empty-env))))
+; <<if zero?(-(x,11)) then -(y,2) else -(y,4)>>
+(define p66_ast_example_01
+  (if-exp (zero?-exp (diff-exp (var-exp 'x) 
+                               (const-exp 11)))
+          (diff-exp (var-exp 'y)
+                    (const-exp 2))
+          (diff-exp (var-exp 'y)
+                    (const-exp 4))))
+(eopl:pretty-print "(value-of p66_ast_example_01 p66_ast_example_01_init_env) = ")
+(eopl:pretty-print (value-of p66_ast_example_01
+                             p66_ast_example_01_init_env))
+
+; eopl, p68, Figure 3.5 An example of let
+; <<let x = 7
+;   in let y = 2   ; in后面的代表let-exp的body
+;      in let y = let x = -(x,1) in -(x,y) 
+;         in -(-(x,8),y)>>
+(define p68_ast_example_01
+  (let-exp 'x
+           (const-exp 7)
+           (let-exp 'y
+                    (const-exp 2)
+                    (let-exp 'y
+                             (let-exp 'x
+                                      (diff-exp (var-exp 'x)
+                                                (const-exp 1))
+                                      (diff-exp (var-exp 'x)
+                                                (var-exp 'y)))
+                             (diff-exp (diff-exp (var-exp 'x)
+                                                 (const-exp 8))
+                                       (var-exp 'y))))))
+(define p68_ast_example_01_init_env (empty-env))
+(eopl:pretty-print "(value-of p68_ast_example_01 p68_ast_example_01_init_env) = ")
+(eopl:pretty-print (value-of p68_ast_example_01
+                             p68_ast_example_01_init_env))
+; 分析过程
+;    
+;    ; *
+;               (let-exp 'y
+;                        (const-exp 2)
+;                        (let-exp 'y
+;                                 (let-exp 'x
+;                                          (diff-exp (var-exp 'x)
+;                                                    (const-exp 1))
+;                                          (diff-exp (var-exp 'x)
+;                                                    (var-exp 'y)))
+;                                 (diff-exp (diff-exp (var-exp 'x)
+;                                                     (const-exp 8))
+;                                           (var-exp 'y))))))
+;    value-of * [x= ⌈ 7 ⌉ ]
+;    
+;    ; **
+;                        (let-exp 'y
+;                                 (let-exp 'x
+;                                          (diff-exp (var-exp 'x)
+;                                                    (const-exp 1))
+;                                          (diff-exp (var-exp 'x)
+;                                                    (var-exp 'y)))
+;                                 (diff-exp (diff-exp (var-exp 'x)
+;                                                     (const-exp 8))
+;                                           (var-exp 'y))))))
+;    value-of ** [y= ⌈ 2 ⌉ ,x= ⌈ 7 ⌉ ]
+;    
+;    ; *** 
+;                                 (diff-exp (diff-exp (var-exp 'x)
+;                                                     (const-exp 8))
+;                                           (var-exp 'y))))))
+;    value-of *** [y= ⌈4⌉, y= ⌈ 2 ⌉ ,x= ⌈ 7 ⌉ ]
+;    ; => -1 - 4  = -5
+;    ; 为了算出新的y binging的value, 需要value-of aux* [y= ⌈ 2 ⌉ ,x= ⌈ 7 ⌉ ]
+;                                ; aux*
+;                                 (let-exp 'x
+;                                          (diff-exp (var-exp 'x)
+;                                                    (const-exp 1))
+;                                          (diff-exp (var-exp 'x)
+;                                                    (var-exp 'y)))
+;    ; => 
+;    value-of aux** [x= ⌈6⌉,y= ⌈ 2 ⌉ ,x= ⌈ 7 ⌉ ]
+;                                ; aux**
+;                                          (diff-exp (var-exp 'x)
+;                                                    (var-exp 'y)))
+;    ; => 4 
