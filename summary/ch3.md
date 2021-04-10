@@ -57,13 +57,16 @@
 value-of输入expression, 即AST. 输出ExpVal, 即已求值好的值(#(struct:bool-val #t) #(struct:num-val 2)这样, 包装了一层, 在基础的值上面)
 
 * 关于ExpVal的一些细节:
-num-val : Int → ExpVal        ⌈ ⌉    
-expval->num : ExpVal → Int    ⌊ ⌋
+
+```C
+num-val : Int -> ExpVal        ⌈ ⌉    
+expval->num : ExpVal -> Int    ⌊ ⌋
 
 We also write ⌈ n ⌉ in place of (num-val n), and ⌊ val ⌋ in place of (expval->num val).
- 
+
 num-val       ⌈ n ⌉      ⌈ 里面是Int ⌉   
 expval->num   ⌊ val ⌋    ⌊ 里面是ExpVal ⌋ , 经过⌊⌋之后变成Int
+```
 
 > 总之, 就是在ExpVal 和 Int/Bool之间互转, ExpVal是value-of内部使用的representation
 
