@@ -1,7 +1,8 @@
+; 代码copy from 3_13
 #lang eopl
 
-(require "../3_06/env.scm")
-(require "../3_10/expval.scm")
+(require "../3_16/env.scm")
+(require "../3_16/expval.scm")
 
 (define-datatype program program? 
   (a-program 
@@ -33,8 +34,8 @@
  (var-exp 
   (var identifier?))
  (let-exp 
-  (var identifier?) 
-  (exp1 expression?) 
+  (vars (list-of identifier?)) 
+  (exps (list-of expression?))
   (body expression?))
  (equal?-exp
   (exp1 expression?)
@@ -45,11 +46,6 @@
  (less?-exp
   (exp1 expression?)
   (exp2 expression?))
- ;(cond-exp
- ; (exp_pairs (list-of pair-both-expression?)))
- ;(cond-exp 
- ; (exps1 (list-of expression?)) 
- ; (exps2 (list-of expression?)))
  (cond-exp
   (cond_exps (list-of expression?))
   (act_exps  (list-of expression?)))
@@ -66,13 +62,6 @@
  (list-exp
   (exps (list-of expression?)))  ; list-of #lang eopl内置了
 )
-
-; ; 检验一个pair都是expression
-; (define (pair-both-expression? exp_pair)
-;   (and (pair? exp_pair)
-;        (expression? (car exp_pair))
-;        (expression? (cadr exp_pair))))
-
 
 (define the-lexical-spec
   '((whitespace (whitespace) skip)
@@ -98,9 +87,8 @@
     (expression ("minus" "(" expression ")") minus-exp)
     (expression ("zero?" "(" expression ")") zero?-exp)
     (expression ("if" expression "then" expression "else" expression) if-exp)
-    (expression ("let" identifier "=" expression "in" expression) let-exp)
-    (expression ("cond" (arbno expression "==>" expression) "end") cond-exp)  ; arbno是什么? 可以为空, 这个list, 如: (eopl:pretty-print (run "cond end")), 最后和cond存在但是找不到一样的情况, todo待添加default分支?
-    ;(expression ("cond" (separated-list (expression "==>" expression) ",") "end" ) list-exp) 不对
+    (expression ("let" (arbno identifier "=" expression) "in" expression) let-exp) ; arbno可以出现0个吗? let这里可以
+    (expression ("cond" (arbno expression "==>" expression) "end") cond-exp)  ; arbno是什么?
     (expression ("cons" "(" expression "," expression ")") cons-exp)
     (expression ("car" "(" expression ")") car-exp)
     (expression ("cdr" "(" expression ")") cdr-exp)
@@ -163,16 +151,18 @@
         (let ((val1 (value-of exp1 env))) 
           (let ((num1 (expval->num val1))) 
             (if (zero? num1) 
-                (bool-val #t) 
-                (bool-val #f)))))
+                (num-val 1) 
+                (num-val 0)))))
       (if-exp (exp1 exp2 exp3)
         (let ((val1 (value-of exp1 env)))
-            (if (expval->bool val1)
+            (if (not (= (expval->num val1) 0))
                 (value-of exp2 env)
                 (value-of exp3 env))))
-      (let-exp (var exp1 body)
-        (let ((val1 (value-of exp1 env)))
-          (value-of body (extend-env var val1 env))))
+      (let-exp (vars exps body)
+        (let ((val_exps (map (lambda (exp_item) 
+                            (value-of exp_item env))
+                         exps)))
+          (value-of body (extend-env vars val_exps env))))
       (cond-exp (cond_exps act_exps)
         (cond-exp-handle-aux cond_exps act_exps env))
       (equal?-exp (exp1 exp2)
@@ -180,21 +170,27 @@
               (val2 (value-of exp2 env)))
           (let ((num1 (expval->num val1))
                 (num2 (expval->num val2)))
-            (bool-val (= num1 num2)))
+            (if (= num1 num2)
+                (num-val 1)
+                (num-val 0)))
           ))
       (greater?-exp (exp1 exp2)
         (let ((val1 (value-of exp1 env))
               (val2 (value-of exp2 env)))
           (let ((num1 (expval->num val1))
                 (num2 (expval->num val2)))
-            (bool-val (> num1 num2)))
+            (if (> num1 num2)
+                (num-val 1)
+                (num-val 0)))
           ))
       (less?-exp (exp1 exp2)
         (let ((val1 (value-of exp1 env))
               (val2 (value-of exp2 env)))
           (let ((num1 (expval->num val1))
                 (num2 (expval->num val2)))
-            (bool-val (< num1 num2)))
+            (if (< num1 num2)
+                (num-val 1)
+                (num-val 0)))
           ))
       (cons-exp (exp1 exp2)
         (let ((val1 (value-of exp1 env))
@@ -221,62 +217,59 @@
                        exps)))
   )))
 
-(define test_init_env
-                            (empty-env))
-
 (define (cond-exp-handle-aux cond_exps act_exps env)
   (if (null? cond_exps)
       (eopl:error 'cond-exp-handle-aux "cond fail, no exist cond")
       (let ((cond_exp (car cond_exps))
             (act_exp (car act_exps)))
         (let ((val_cond_exp (value-of cond_exp env)))
-          (if (expval->bool val_cond_exp)
+          (if (not (= (expval->num val_cond_exp) 0))
               (value-of act_exp env)
               (cond-exp-handle-aux (cdr cond_exps)
                                    (cdr act_exps)
                                    env))))))
 
+(define test_init_env
+                            (empty-env))
+
+
 (define test_01_example
-  (cond-exp (list (equal?-exp (const-exp 5)
-                              (const-exp 5)))
-            (list (addition-exp (const-exp 100)
-                                (const-exp 200)))))
+  (let-exp (list 'x)
+           (list (const-exp 30))
+           (let-exp (list 'x 'y)
+                    (list (diff-exp (var-exp 'x) 
+                                    (const-exp 1))
+                          (diff-exp (var-exp 'x)
+                                    (const-exp 2)))
+                    (diff-exp (var-exp 'x)
+                              (var-exp 'y)))))
+
 (eopl:pretty-print (value-of test_01_example
                              test_init_env))
-; (define test_02_example
-;   (cond-exp (list (equal?-exp (const-exp 5)
-;                               (const-exp 6)))
-;             (list (addition-exp (const-exp 100)
-;                                 (const-exp 200)))))
-; (eopl:pretty-print (value-of test_02_example
-;                              test_init_env))
-
-; (eopl:pretty-print (scan&parse
-; " cond <(100, 2) ==>
-;   let x = 4
-;   in list (x, -(x,1), - (x, 3))
-;   >(10, 3) ==> 100 end"
-; ))
-(eopl:pretty-print (run
-" cond <(100, 2) ==>
-  let x = 4
-  in list (x, -(x,1), - (x, 3))
-  >(10, 3) ==> 999 end"
+(eopl:pretty-print (run 
+"
+let x = 30
+in let x = -(x,1) y = -(x,2) 
+   in +(x,y)
+"
+))
+(eopl:pretty-print (run 
+"
+let x = 30
+in let x = -(x,1) y = -(x,2) 
+   in -(x,y)
+"
 ))
 
-; (eopl:pretty-print (scan&parse
-;   "cond <(1, 2) ==> 100 end"
-;   ))
-(eopl:pretty-print (run
-  "cond <(1, 2) ==> 100 end"
-  ))
 
-; todo, 目前如果所有cond都不满足, 是报错, 而没有else(default)分支
 ; (eopl:pretty-print (run
-; " cond <(100, 2) ==>
-;   let x = 4
-;   in list (x, -(x,1), - (x, 3))
-;   <(10, 3) ==> 999 end"
+; "
+; let x = 100
+; in let
+;    in -(x, 21)
+; "
 ; ))
 
-(eopl:pretty-print (run "cond end"))
+
+
+; 总结: 感觉3.16很简单... 就只要改改env就行了
