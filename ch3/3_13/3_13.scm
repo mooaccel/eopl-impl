@@ -67,12 +67,6 @@
   (exps (list-of expression?)))  ; list-of #lang eopl内置了
 )
 
-; 检验一个pair都是expression
-(define (pair-both-expression? exp_pair)
-  (and (pair? exp_pair)
-       (expression? (car exp_pair))
-       (expression? (cadr exp_pair))))
-
 (define the-lexical-spec
   '((whitespace (whitespace) skip)
     (comment ("%" (arbno (not #\newline))) skip)
