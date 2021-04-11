@@ -37,6 +37,10 @@
   (vars (list-of identifier?)) 
   (exps (list-of expression?))
   (body expression?))
+ (let*-exp 
+  (vars (list-of identifier?)) 
+  (exps (list-of expression?))
+  (body expression?))
  (equal?-exp
   (exp1 expression?)
   (exp2 expression?))
@@ -88,6 +92,7 @@
     (expression ("zero?" "(" expression ")") zero?-exp)
     (expression ("if" expression "then" expression "else" expression) if-exp)
     (expression ("let" (arbno identifier "=" expression) "in" expression) let-exp) ; arbno可以出现0个吗? let这里可以
+    (expression ("let*" (arbno identifier "=" expression) "in" expression) let*-exp)
     (expression ("cond" (arbno expression "==>" expression) "end") cond-exp)  ; arbno是什么?
     (expression ("cons" "(" expression "," expression ")") cons-exp)
     (expression ("car" "(" expression ")") car-exp)
@@ -159,6 +164,11 @@
                 (value-of exp2 env)
                 (value-of exp3 env))))
       (let-exp (vars exps body)
+        (let ((val_exps (map (lambda (exp_item) 
+                            (value-of exp_item env))
+                         exps)))
+          (value-of body (extend-env vars val_exps env))))
+      (let*-exp (vars exps body)
           ;(eopl:pretty-print vars)
           ;(eopl:pretty-print exps)
           (let ((val_exps (eval-exps-with-update-env-aux vars exps env)))
@@ -272,7 +282,7 @@
 (eopl:pretty-print (run
 "
 let x = 30
-in let x = -(x,1) y = -(x,2) 
+in let* x = -(x,1) y = -(x,2) 
    in +(x,y)
 "
 ))
@@ -280,7 +290,7 @@ in let x = -(x,1) y = -(x,2)
 (eopl:pretty-print (run 
 "
 let x = 30
-in let x = -(x,1) y = -(x,2) 
+in let* x = -(x,1) y = -(x,2) 
    in -(x,y)
 "
 ))
