@@ -2,7 +2,6 @@
 
 (require "../3_06/env.scm")
 (require "../3_10/expval.scm")
-(require "../3_10/list_of.scm")
 
 (define-datatype program program? 
   (a-program 
@@ -57,7 +56,7 @@
  (nulllist?-exp
   (exp1 expression?))
  (list-exp
-  (exps (list-of expression?)))
+  (exps (list-of expression?)))  ; list-of #lang eopl内置了
 )
 
 (define the-lexical-spec
@@ -221,4 +220,24 @@
 (eopl:pretty-print (run 
 "let x = 4
  in list (x, -(x,1), list (100 ,200),- (x, 3))"
+))
+(eopl:pretty-print (run 
+" cdr (
+let x = 4
+ in list (x, -(x,1), list (100 ,200),- (x, 3))
+ )"
+))
+(eopl:pretty-print (run 
+"cdr ( cdr (
+let x = 4
+ in list (x, -(x,1), list (100 ,200),- (x, 3))
+           )   
+     )"
+))
+(eopl:pretty-print (run 
+"car (cdr ( cdr (
+let x = 4
+ in list (x, -(x,1), list (100 ,200),- (x, 3))
+           )   
+     ))"
 ))

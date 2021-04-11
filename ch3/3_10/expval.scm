@@ -1,7 +1,5 @@
 #lang eopl
 
-(require "../3_10/list_of.scm")
-
 (define-datatype expval expval?
   (num-val 
     (num number?)) 
@@ -11,9 +9,13 @@
     (car_val expval?)
     (cdr_val expval?))
   (cons-emptylist-val)
-  (list-val
-    (expvals (list-of expval?)))
 )
+
+(define (list-val expvals)
+  (if (null? expvals)
+      (cons-emptylist-val)
+      (cons-val (car expvals)
+                (list-val (cdr expvals)))))
 
 (define expval->num
   (lambda (val) 
