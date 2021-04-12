@@ -149,7 +149,7 @@
   (rands (list-of expression?)))
  (letproc-exp
   (proc_name identifier?)
-  (var identifier?)
+  (vars (list-of identifier?))
   (proc_body expression?)
   (let_body expression?))
 )
@@ -194,7 +194,7 @@
     (expression ("list" "(" (separated-list expression ",") ")" ) list-exp)  ; separated-list是什么?
     (expression ("proc" "(" (separated-list identifier ",") ")" expression) proc-exp)  ; proc也可以没有参数
     (expression ("(" expression (arbno expression) ")") call-exp)  ; (f)可以没有参数, 只有rator
-    (expression ("letproc" identifier "=" "(" identifier ")" expression "in" expression) letproc-exp)
+    (expression ("letproc" identifier "=" "(" (separated-list identifier ",") ")" expression "in" expression) letproc-exp)
 ))
 
 ; (eopl:pretty-print (sllgen:show-define-datatypes the-lexical-spec the-grammar))
@@ -349,8 +349,8 @@
                             (value-of rand_exp env))
                          rands)))
           (apply-procedure proc args)))
-      (letproc-exp (proc_name var proc_body let_body)
-        (let ((proc_val (proc-val (procedure var proc_body env))))
+      (letproc-exp (proc_name vars proc_body let_body)
+        (let ((proc_val (proc-val (procedure vars proc_body env))))
           (value-of let_body (extend-env (list proc_name) 
                                          (list proc_val)
                                          env))
@@ -485,5 +485,32 @@ let f = proc (x, y, z) proc (m, n) proc(q, w, e, o)
                                                         +(+(q,w) , +( e,o))
                                                       )
 in (((f 1 2 3) 8 9) 10 11 12 13)
+"
+))
+
+(eopl:pretty-print "========= 3.21 letproc test")
+(eopl:pretty-print (run
+"
+letproc f= (x) -(x, 1) 
+in (f 30)
+"
+))
+(eopl:pretty-print (run
+"
+letproc f= (y) *(y, 10) 
+in (f 30)
+"
+))
+(eopl:pretty-print (run
+"
+letproc f= (x, y) *(y,-(x, 1))
+in (f 30 20)
+"
+))
+; 混合类型
+(eopl:pretty-print (run
+"
+letproc f = (x, y) proc (m, n) +(*(x,y) , *(m, n)) 
+in ((f 10 20) 20 30)
 "
 ))
