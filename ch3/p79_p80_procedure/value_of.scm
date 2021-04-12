@@ -528,12 +528,14 @@ in -((f 1), (g 1))
 (eopl:pretty-print (run
 "
 let x = 200
-in let f = proc (z) -(z,x) 
-  in let x = 100
-    in let g = proc (z) -(z,x)
-      in -((f 1), (g 1))
+in let f = proc (z) -(z,x)
+   in let x = 100
+      in let g = proc (z) -(z,x)
+         in -((f 1), (g 1))
 "
 ))
+; 注意在let f = proc (z) -(z,x)里, body expression -(z,x)并没有被马上求值, 而是放到了procedure里保存起来了.
+; x = 200在env里被一起保存了, 之后在value-of (var-exp 'x)的时候会去env里拿到200
 
 
 ; 多参数怎么做? todo , 会导致目前代码有什么变动?
