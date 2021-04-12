@@ -89,9 +89,11 @@ expval->num   ⌊ val ⌋    ⌊ 里面是ExpVal ⌋ , 经过⌊⌋之后变成I
 
 1. interface/specification: 
 
-> proc? : SchemeVal → Bool
-> procedure : Var × Exp × Env → Proc
-> apply-procedure : Proc × ExpVal → ExpVal
+```C
+proc? : SchemeVal → Bool
+procedure : Var × Exp × Env → Proc
+apply-procedure : Proc × ExpVal → ExpVal
+```
 
 关键都是把env保存下来, 然后在调用的时候拿出来, 把var val pair放入env, 再对body求值即可
 
@@ -125,4 +127,4 @@ expval->num   ⌊ val ⌋    ⌊ 里面是ExpVal ⌋ , 经过⌊⌋之后变成I
       (procedure (var body saved-env)  ; 把需要的值extract出来
         (value-of body 
                   (extend-env var val saved-env))))))
-```scheme
+```
