@@ -193,7 +193,7 @@
     (expression ("list" "(" (separated-list expression ",") ")" ) list-exp)  ; separated-list是什么?
     (expression ("proc" "(" identifier ")" expression) proc-exp)
     (expression ("(" expression expression ")") call-exp)  ;目前只支持单参数?
-    (expression ("letproc" identifier "= " "(" identifier ")" expression "in" expression) letproc-exp)
+    (expression ("letproc" identifier "=" "(" identifier ")" expression "in" expression) letproc-exp)
 ))
 
 ;(eopl:pretty-print (sllgen:show-define-datatypes the-lexical-spec the-grammar))
@@ -400,13 +400,13 @@
                             (empty-env))
 (eopl:pretty-print (run
 "
-letproc f = (x) -(x, 1) 
+letproc f= (x) -(x, 1) 
 in (f 30)
 "
 ))
 (eopl:pretty-print (run
 "
-letproc f = (y) *(y, 10) 
+letproc f= (y) *(y, 10) 
 in (f 30)
 "
 ))
