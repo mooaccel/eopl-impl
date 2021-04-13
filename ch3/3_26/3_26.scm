@@ -79,18 +79,18 @@
 (define (apply-procedure proc1 val) 
   (cases proc proc1 
     (procedure (var body saved_env)
-      (eopl:pretty-print "debug apply-procedure ...")
-      (eopl:pretty-print "proc1---------------")
-      (eopl:pretty-print proc1)
-      (eopl:pretty-print "val---------------")
-      (eopl:pretty-print val)
-      (eopl:pretty-print "proc1 contain var body saved_env:")
-      (eopl:pretty-print "var---------------")
-      (eopl:pretty-print var)
-      (eopl:pretty-print "body---------------")
-      (eopl:pretty-print body)
-      (eopl:pretty-print "saved_env---------------")
-      (eopl:pretty-print saved_env)
+      ; (eopl:pretty-print "debug apply-procedure ...")
+      ; (eopl:pretty-print "proc1---------------")
+      ; (eopl:pretty-print proc1)
+      ; (eopl:pretty-print "val---------------")
+      ; (eopl:pretty-print val)
+      ; (eopl:pretty-print "proc1 contain var body saved_env:")
+      ; (eopl:pretty-print "var---------------")
+      ; (eopl:pretty-print var)
+      ; (eopl:pretty-print "body---------------")
+      ; (eopl:pretty-print body)
+      ; (eopl:pretty-print "saved_env---------------")
+      ; (eopl:pretty-print saved_env)
       (value-of body 
                 (extend-env (list var) 
                             (list val) 
@@ -187,13 +187,13 @@
               (num2 (expval->num val2))) 
           (num-val (- num1 num2)))))
     (addition-exp (exp1 exp2)
-      (eopl:pretty-print "debug value-of addition-exp ...")
-      (eopl:pretty-print "exp1---------------")
-      (eopl:pretty-print exp1)
-      (eopl:pretty-print "exp2---------------")
-      (eopl:pretty-print exp2)
-      (eopl:pretty-print "env---------------")
-      (eopl:pretty-print env)
+      ; (eopl:pretty-print "debug value-of addition-exp ...")
+      ; (eopl:pretty-print "exp1---------------")
+      ; (eopl:pretty-print exp1)
+      ; (eopl:pretty-print "exp2---------------")
+      ; (eopl:pretty-print exp2)
+      ; (eopl:pretty-print "env---------------")
+      ; (eopl:pretty-print env)
       (let ((val1 (value-of exp1 env)) 
             (val2 (value-of exp2 env))) 
         (let ((num1 (expval->num val1)) 
@@ -216,13 +216,13 @@
                        exps)))
         (value-of body (extend-env vars val_exps env))))
     (proc-exp (var body) 
-      (eopl:pretty-print "debug value-of proc-exp ...")
-      (eopl:pretty-print "var in create time---------------")
-      (eopl:pretty-print var)
-      (eopl:pretty-print "body in create time---------------")
-      (eopl:pretty-print body)
-      (eopl:pretty-print "env in create time---------------")
-      (eopl:pretty-print env)
+      ; (eopl:pretty-print "debug value-of proc-exp ...")
+      ; (eopl:pretty-print "var in create time---------------")
+      ; (eopl:pretty-print var)
+      ; (eopl:pretty-print "body in create time---------------")
+      ; (eopl:pretty-print body)
+      ; (eopl:pretty-print "env in create time---------------")
+      ; (eopl:pretty-print env)
       (let ((free_variables (free-variable body (list var))))
         (proc-val (procedure var 
                              body 
@@ -230,13 +230,13 @@
                              (optimized-env env free_variables)))
          ))
     (call-exp (rator rand)
-      (eopl:pretty-print "debug value-of call-exp ...")
-      (eopl:pretty-print "rator---------------")
-      (eopl:pretty-print rator)
-      (eopl:pretty-print "rand---------------")
-      (eopl:pretty-print rand)
-      (eopl:pretty-print "env ---------------")
-      (eopl:pretty-print env)
+      ; (eopl:pretty-print "debug value-of call-exp ...")
+      ; (eopl:pretty-print "rator---------------")
+      ; (eopl:pretty-print rator)
+      ; (eopl:pretty-print "rand---------------")
+      ; (eopl:pretty-print rand)
+      ; (eopl:pretty-print "env ---------------")
+      ; (eopl:pretty-print env)
       (let ((proc (expval->proc (value-of rator env)))
             (arg (value-of rand env)))
         (apply-procedure proc arg)))
@@ -357,8 +357,6 @@
                        (var-exp 'i)))
 (list 'x)
 ))
-(newline)
-(newline)
 
 ; ; 测试optimized-env 
 ; (define test_init_env (extend-env (list 'q 'q1)
@@ -374,7 +372,8 @@
 ;   (optimized-env test_init_env '(w e w2 q1))
 ; )
 
-; 使用优化后的env
+; 使用优化后的env, 如果想看细节, 打开那些注释, 然后只运行下面这个例子
+; -114
 (eopl:pretty-print (run
 "
 let unuse_variable_01 = 10
@@ -383,5 +382,54 @@ in let m = 100
       in let p = proc (x) let i = +(m, 20) in +(-(x, a), i)
              a = 5    
          in -(a,(p 2))
+"
+))
+
+; 
+; 70
+(eopl:pretty-print (run
+"
+let unuse_var_01 = 1000
+    ufsd = 2000
+    dfsdfsa = 3000
+in 
+let f = proc (x) proc (y) +(x,y)
+in ((f 30) 40)
+"
+))
+
+; 30
+(eopl:pretty-print (run
+"
+let unuse_var_01 = 1000
+    ufsdadfsaf = 2000
+    dfsdfsa = 3000
+in
+let f = proc (x) proc (y) -(x, -(0, y)) 
+in ((f 10) 20)
+"
+))
+
+; 610
+(eopl:pretty-print (run
+"
+let unuse_var_01 = 1000
+    ufsdadfsaf = 2000
+    dfsdfsa = 3000
+in
+let f = proc (x) proc (y) proc(z) +(x, *(y, z)) 
+in (((f 10) 20) 30)
+"
+))
+
+; 579
+(eopl:pretty-print (run
+"
+let unuse_var_01 = 1000
+    ufsdadfsaf = 2000
+    dfsdfsa = 3000
+in
+let f = proc (x) proc (y) proc(z) proc(m) +(-(+(x, *(y, z)), m), 9)
+in ((((f 10) 20) 30) 40)
 "
 ))
