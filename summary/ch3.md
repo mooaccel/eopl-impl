@@ -116,7 +116,7 @@ apply-procedure : Proc × ExpVal → ExpVal
 * 另一种方式是借助define-datatype, 让它帮我们实现, 帮我们选一种representation
 
 ```scheme
-(define-datatype proc proc?      ; define-datatype这里提供了proc? predicate
+(define-datatype proc proc?
   (procedure 
     (var identifier?) 
     (body expression?) 
