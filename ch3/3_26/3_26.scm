@@ -223,12 +223,12 @@
       (eopl:pretty-print body)
       (eopl:pretty-print "env in create time---------------")
       (eopl:pretty-print env)
-      ; (let ((free_variables (free-variable body (list var))))
-      ;   )
-      (proc-val (procedure var 
-                           body 
-                           env)))
-                           ;(optimized-env env free_variables))))
+      (let ((free_variables (free-variable body (list var))))
+        (proc-val (procedure var 
+                             body 
+                             ;env))
+                             (optimized-env env free_variables)))
+         ))
     (call-exp (rator rand)
       (eopl:pretty-print "debug value-of call-exp ...")
       (eopl:pretty-print "rator---------------")
@@ -290,10 +290,62 @@
       (append (free-variable rator bound_vars)
               (free-variable rand bound_vars)))
 ))
-;  
-;  ; 把env里的key在free_variables的重新组合成一个新的env
-;  (define (optimized-env env free_variables)
-;    )
+  
+; 把env里的key在free_variables的重新组合成一个新的env(只有一层)
+(define (optimized-env env free_variables)
+  (define (obtain-pair-from-two-list-aux l1 l2)
+    (if (null? l1)
+        '()
+        (cons (list (car l1)
+                    (car l2))
+              (obtain-pair-from-two-list-aux (cdr l1) 
+                                             (cdr l2)))))
+  ; 返回(pre_vars_accumu, pre_vals_accumu)
+  (define (obtain-new-vars-vals-aux candidate_pairs cur_free_vars pre_vars pre_vals)
+
+    (define (vars-vals-accumu-aux pre_vars_acc pre_vals_acc remaining_pairs)
+      (if (null? remaining_pairs)
+          (cons pre_vars_acc pre_vals_acc)
+          (let ((pr (car remaining_pairs)))
+            ; (eopl:pretty-print "pr")
+            ; (eopl:pretty-print pr)
+            (vars-vals-accumu-aux (cons (car pr) pre_vars_acc)
+                                  (cons (cadr pr) pre_vals_acc)
+                                  (cdr remaining_pairs)))))
+
+    (let ((free_pairs (filter (lambda (pair) 
+                                    (memq (car pair) cur_free_vars))
+                              candidate_pairs)))
+      (vars-vals-accumu-aux pre_vars pre_vals free_pairs)
+    ))
+
+  ; 返回一个一层的新env, 从最底层的new_vars new_vals构造
+  (define (optimized-env-aux env_aux free_variables_aux new_vars new_vals)
+    (if (null? free_variables_aux)  ; 有可能不需要走到env_aux的最里层
+        (extend-env new_vars new_vals (empty-env))
+        (cases environment env_aux
+          (empty-env ()
+            (extend-env new_vars new_vals (empty-env)))
+          (extend-env (idents scheme_vals saved_env)
+            ; 筛选出当前层里面的free variable
+            (let ((cur_layer_free_variables (filter (lambda (v) 
+                                                    (memq v idents))
+                                            free_variables_aux)))
+              (let ((new_vars_vals_pair (obtain-new-vars-vals-aux (obtain-pair-from-two-list-aux idents
+                                                                                                scheme_vals)
+                                                                 cur_layer_free_variables
+                                                                 new_vars
+                                                                 new_vals)))
+                  (let ((remaining_free_variables (filter (lambda (fv) 
+                                                            (not (memq fv cur_layer_free_variables)))
+                                                          free_variables_aux)))
+                    (optimized-env-aux saved_env
+                                       remaining_free_variables
+                                       (car new_vars_vals_pair)                                  
+                                       (cdr new_vars_vals_pair)))))))
+        ))
+
+  (optimized-env-aux env free_variables '() '()))
 
 ; 应该返回(m a)
 (eopl:pretty-print (free-variable
@@ -304,4 +356,32 @@
                                  (var-exp 'a))
                        (var-exp 'i)))
 (list 'x)
+))
+(newline)
+(newline)
+
+; ; 测试optimized-env 
+; (define test_init_env (extend-env (list 'q 'q1)
+;                                   (list (num-val 10) (num-val 11))
+;                                   (extend-env (list 'w 'w1 'w2)
+;                                               (list (num-val 20) (num-val 21) (num-val 22))
+;                                               (extend-env (list 'e)
+;                                                           (list (num-val 30))
+;                                                           (extend-env (list 'r)
+;                                                                       (list (num-val 40))
+;                                                                       (empty-env))))))
+; (eopl:pretty-print
+;   (optimized-env test_init_env '(w e w2 q1))
+; )
+
+; 使用优化后的env
+(eopl:pretty-print (run
+"
+let unuse_variable_01 = 10
+in let m = 100
+   in let a = 3    
+      in let p = proc (x) let i = +(m, 20) in +(-(x, a), i)
+             a = 5    
+         in -(a,(p 2))
+"
 ))
