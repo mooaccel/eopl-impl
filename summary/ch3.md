@@ -1,13 +1,13 @@
-### 3 Expressions
+# 3 Expressions
 
 第二章结尾讲了AST的基础之后, 第三章开始研究Expression
 
-#### 3.1  
+## 3.1  
 (value-of exp ρ) = val
 
 把1/2章铺垫的env用上了. 用于Expression求值
 
-#### 3.2 LET: A Simple Language
+## 3.2 LET: A Simple Language
 最简单的解释器, 看完3.2的这些铺垫之后, 直接上代码, 把代码跑通, 然后做几个练习就明白了, 明白了整个处理流程
 
 > 注意, scan&parse 想使用的话参考3_06/07/08的*_using_sllgen.scm例子. 
@@ -72,7 +72,7 @@ expval->num   ⌊ val ⌋    ⌊ 里面是ExpVal ⌋ , 经过⌊⌋之后变成I
 
 > 这本书按照一步一步, 从易到难, 一步一步增量式加feature, 给的代码示例, 以及后面的习题都非常好, 学习之后帮助挺大.
 
-#### 3.3 PROC: A Language with Procedures
+## 3.3 PROC: A Language with Procedures
 
 在3.2的基础上增加procedure, 作为first class function?
 
@@ -129,7 +129,9 @@ apply-procedure : Proc × ExpVal → ExpVal
                   (extend-env var val saved-env))))))
 ```
 
-exer3_28. Dynamic binding (or dynamic scoping)和lexical binding的一些区别
+---
+
+### exer3_28. Dynamic binding (or dynamic scoping)和lexical binding的一些区别
 
 * lexical binding
 
