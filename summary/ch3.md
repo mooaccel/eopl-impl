@@ -128,3 +128,38 @@ apply-procedure : Proc × ExpVal → ExpVal
         (value-of body 
                   (extend-env var val saved-env))))))
 ```
+
+exer3_28. Dynamic binding (or dynamic scoping)和lexical binding的一些区别
+
+* lexical binding
+
+1. procedure-creation time 保存saved_env 当然还有body, var
+2. 调用时, 把保存的saved_env拿出来, 然后把extend-env (var val, 可能有多对)运用到之前保存的saved_env上面!!!
+
+```scheme
+(call-exp (rator rand)
+  (let ((proc (expval->proc (value-of rator env)))
+        (arg (value-of rand env)))
+    (apply-procedure proc arg)))
+```
+注意proc和arg是在call-exp当时的env得到的, 但是!!! apply-procedure里面的env是之前保存的saved_env, 
+
+如果不选择这样, 另外一种思路是把call-exp的env传递到apply-procedure里, 这样即是dynamic scope了, 见习题3_28
+
+* dynamic binding 
+
+在调用时不用保存env
+```scheme
+    (call-exp (rator rand)
+      (let ((proc (expval->proc (value-of rator env)))
+            (arg (value-of rand env)))
+        (apply-procedure proc arg env)))
+```
+apply-procedure传参额外多传一个env, 这个env就是call-exp所在的env!!! 然后就直接在这个基础上extend-env (val val)
+
+* 这两者最关键的区别是dynamic binding不需要在proc-exp里保存procedure create time (制造的这个时间点) 的env!!!
+
+
+> 至于为什么需要这个, 动机是什么? 另外可以看看ch3/3_26/3_26.md, 联系free variable思考下.
+
+> dynamic scope/dynamic scoping/dynamic binding是一个意思吧? 还有dynamic scope/dynamic scoping/dynamic binding, 关于命名的疑惑, 这里还没彻底弄明白命名...
