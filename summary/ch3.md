@@ -166,6 +166,9 @@ apply-procedure传参额外多传一个env, 这个env就是call-exp所在的env!
 
 > dynamic scope/dynamic scoping/dynamic binding是一个意思吧? 还有dynamic scope/dynamic scoping/dynamic binding, 关于命名的疑惑, 这里还没彻底弄明白命名...
 
+> 更多关于dynamic scope/dynamic scope的问题, 其中一个问题, lisp系有使用dynamic scope的么? 见[lisp_wikipedia](https://en.wikipedia.org/wiki/Lisp_(programming_language))
+> The Lisp family splits over the use of dynamic or static (a.k.a. lexical) scope. Clojure, Common Lisp and Scheme make use of static scoping by default, while newLISP, Picolisp and the embedded languages in Emacs and AutoCAD use dynamic scoping. Since version 24.1, Emacs uses both dynamic and lexical scoping.
+
 ## 3.4 LETREC: A Language with Recursive Procedures
 
 ```C
