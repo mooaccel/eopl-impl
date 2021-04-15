@@ -165,3 +165,12 @@ apply-procedure传参额外多传一个env, 这个env就是call-exp所在的env!
 > 至于为什么需要这个, 动机是什么? 另外可以看看ch3/3_26/3_26.md, 联系free variable思考下.
 
 > dynamic scope/dynamic scoping/dynamic binding是一个意思吧? 还有dynamic scope/dynamic scoping/dynamic binding, 关于命名的疑惑, 这里还没彻底弄明白命名...
+
+## 3.4 LETREC: A Language with Recursive Procedures
+
+```C
+增加递归能力, 实现lecrec-exp, 最难理解的是procedure里面放的是外层的env(包括proc_name, proc-val pair在内的env)
+书本上的实现方式确实不太好理解(比较晦涩), 3_35提供的方式比较好理解. 其实这两者本质差不多, 反正都是底下实现技术, 在接口不变的情况下可以替换.
+
+3_35方法参考ch3/3_35/3_35.png和ch3/3_34/3_34_v2示意图.png, 分别是单递归和多递归情况下的示意图
+```
