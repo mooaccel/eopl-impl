@@ -312,3 +312,19 @@ letrec even(x) = if zero?(x) then 1 else (odd -(x,1))
 in (even 13)
 "
 ))
+
+; 3_33如下:
+(eopl:pretty-print (run
+"
+letrec even(x, y) = if zero?(x) then +(y,1) else (odd -(x,1) y) 
+       odd(x, y) = if zero?(x) then -(y,1) else (even -(x,1) y) 
+in (odd 13 100)
+"
+))
+(eopl:pretty-print (run
+"
+letrec even(x, y) = if zero?(x) then +(y,1) else (odd -(x,1) y) 
+       odd(x, y) = if zero?(x) then -(y,1) else (even -(x,1) y) 
+in (even 13 100)
+"
+))
