@@ -255,6 +255,8 @@ in -(a,(p 2))
 (eopl:pretty-print (run
 "
 let unuse_variable_01 = 10
+    fjdk = 234
+    dfdaf = 342
 in let m = 100
    in let a = 3    
       in let p = proc (x) let i = +(m, 20) in +(-(x, a), i)
