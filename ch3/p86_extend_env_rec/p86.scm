@@ -299,3 +299,5 @@ letrec double(x) = if zero?(x)
 in (double 2)
 "
 ))
+
+; double 2 = +(double (1), 2) = +((double (0), 2) 2) = 4
