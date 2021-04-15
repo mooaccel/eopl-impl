@@ -174,3 +174,8 @@ apply-procedure传参额外多传一个env, 这个env就是call-exp所在的env!
 
 3_35方法参考ch3/3_35/3_35.png和ch3/3_34/3_34_v2示意图.png, 分别是单递归和多递归情况下的示意图
 ```
+
+ch3.4的各种习题做了之后, 对在lexical binding下怎么实现递归(单递归, 互递归(可能多个函数))机制更加清晰了.
+
+> 题外话: 各种习题背后可能都需要明白一个道理=> 在interface/specification不变的情况下, 改变implementation/representation没关系
+> 不会影响其他模块代码, 能很好的进行重构.
