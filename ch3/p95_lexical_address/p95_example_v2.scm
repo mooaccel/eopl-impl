@@ -205,18 +205,6 @@
         (apply-procedure proc arg)))
 ))
 
-; (define extend-nameless-env
-;   (lambda (val nameless_env) 
-;     (cons val nameless_env)))
-; 
-;  (nameless-var-exp  ; 存储lexical address
-;   (lexical_address number?))
-;  (nameless-let-exp
-;   (val_exp expression?)
-;   (body_exp expression?))
-;  (nameless-proc-exp
-;   (proc_exp expression?))
-
 ;  ; Program → Nameless-program
 (define translation-of-program
   (lambda (pgm) 
