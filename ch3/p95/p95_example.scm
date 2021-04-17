@@ -11,42 +11,24 @@
 
 (define (identifier? var)
   (symbol? var))
-(define (scheme-val? v)
-  (expval? v))
-(define-datatype environment environment?
-  (empty-env)
-  (extend-env
-    (idents (list-of identifier?))
-    (scheme_vals (list-of scheme-val?))
-    (saved_env environment?)))
-(define (apply-env env search_var)
-  (cases environment env
-    (empty-env ()
-      (eopl:error 'apply-env "~s not found" search_var))
-    (extend-env (idents scheme_vals saved_env)
-      (if (is-in-saved-vars-aux? search_var idents)
-          (obtain-val-aux search_var idents scheme_vals)  
-          (apply-env saved_env search_var)))))
-(define (is-in-saved-vars-aux? s saved_vars)
-  (if (null? saved_vars)
-      #f
-      (let ((car_saved_vars (car saved_vars)))
-        (if (eqv? car_saved_vars s)
-            #t
-            (is-in-saved-vars-aux? s (cdr saved_vars))))))
-(define (obtain-val-aux search_var saved_vars saved_vals)
-  (let ((car_saved_vars (car saved_vars))
-        (car_saved_vals (car saved_vals)))
-    (if (eqv? car_saved_vars search_var)
-        car_saved_vals
-        (obtain-val-aux search_var (cdr saved_vars) (cdr saved_vals)))))
 
-; expressed value
+; nameless-environment
+(define nameless-environment?
+  (lambda (x) 
+    ((list-of expval?) x)))
+(define empty-nameless-env
+  (lambda () '()))
+(define extend-nameless-env
+  (lambda (val nameless_env) 
+    (cons val nameless_env)))
+(define apply-nameless-env
+  (lambda (nameless_env lexical_address) 
+    (list-ref nameless_env lexical_address)))
+
+; expressed value, expval
 (define-datatype expval expval?
   (num-val
    (num number?))
-  ;(bool-val
-  ;  (bool boolean?))
   (proc-val
    (proc proc?)))
 (define expval->num
@@ -56,13 +38,6 @@
         num) 
       (else 
         (expval-extractor-error 'num v)))))
-;(define expval->bool
-;  (lambda (v)
-;    (cases expval v
-;      (bool-val (bool)
-;        bool)
-;      (else 
-;        (expval-extractor-error 'bool v)))))
 (define expval->proc
   (lambda (v)
     (cases expval v
@@ -76,36 +51,22 @@
            "Looking for a ~s variant, found ~s"
            variant value)))
 
-; 目前暂时调整成只支持一个参数
-(define-datatype proc proc?
+; proc
+(define-datatype proc proc?  ; proc不用再保存var
   (procedure 
-    (var identifier?) 
-    (body expression?) 
-    (saved_env environment?)))
+    (proc_body expression?) 
+    (saved_nameless_env nameless-environment?)))
+(define apply-procedure
+  (lambda (proc1 val) 
+    (cases proc proc1 
+      (procedure (proc_body saved_nameless_env) 
+        (value-of proc_body (extend-nameless-env val saved_nameless_env))))))
 
-;  (define (apply-procedure proc1 val) 
-;    (cases proc proc1 
-;      (procedure (var body saved_env)
-;        ; (eopl:pretty-print "debug apply-procedure ...")
-;        ; (eopl:pretty-print "proc1---------------")
-;        ; (eopl:pretty-print proc1)
-;        ; (eopl:pretty-print "val---------------")
-;        ; (eopl:pretty-print val)
-;        ; (eopl:pretty-print "proc1 contain var body saved_env:")
-;        ; (eopl:pretty-print "var---------------")
-;        ; (eopl:pretty-print var)
-;        ; (eopl:pretty-print "body---------------")
-;        ; (eopl:pretty-print body)
-;        ; (eopl:pretty-print "saved_env---------------")
-;        ; (eopl:pretty-print saved_env)
-;        (value-of body 
-;                  (extend-env (list var) 
-;                              (list val) 
-;                              saved_env)))))
-
+; program
 (define-datatype program program? 
   (a-program 
     (exp1 expression?)))
+; expression
 (define-datatype expression expression?
   (const-exp
    (num number?))
@@ -149,15 +110,6 @@
    (proc_exp expression?))
 )
 
-;      (var-exp (var) 
-;        (nameless-var-exp (apply-senv senv var)))
-;      ; ?
-;      (let-exp (var exp1 body) 
-;        (nameless-let-exp (translation-of exp1 senv) 
-;                          (translation-of body (extend-senv var senv)))) 
-;      (proc-exp (var body) 
-;        (nameless-proc-exp (translation-of body (extend-senv var senv)))) 
-
 (define the-lexical-spec
   '((whitespace (whitespace) skip)
     (comment ("%" (arbno (not #\newline))) skip)
@@ -176,7 +128,7 @@
     (expression ("*" "(" expression "," expression ")") multiplication-exp)
     (expression ("zero?" "(" expression ")") zero?-exp)
     (expression ("if" expression "then" expression "else" expression) if-exp)
-    (expression ("let" (arbno identifier "=" expression) "in" expression) let-exp)
+    (expression ("let" identifier "=" expression "in" expression) let-exp)
     (expression ("proc" "(" identifier ")" expression) proc-exp)
     (expression ("(" expression expression ")") call-exp)
 ))
@@ -184,95 +136,90 @@
 (define scan&parse
   (sllgen:make-string-parser the-lexical-spec the-grammar))
 
-; (define run
-;   (lambda (string)
-;     (value-of-program (scan&parse string))))
+(define run
+  (lambda (string)
+    (value-of-program (translation-of-program (scan&parse string)))))
+ 
+(define value-of-program
+  (lambda (pgm)
+    (cases program pgm
+	   (a-program (exp1)
+		      (value-of exp1 empty_init_nameless_env)))))
+
+(define empty_init_nameless_env (empty-nameless-env))
+
+(define (value-of exp env)  ; 这里的env是nameless env
+
+  (cases expression exp
+    (const-exp (num)
+      (num-val num))
+    (var-exp (var)
+      #f)
+    (let-exp (var val body)
+      #f)
+    (proc-exp (var body)
+      #f)
+    (zero?-exp (exp1)
+      (let ((val1 (value-of exp1 env))) 
+        (let ((num1 (expval->num val1))) 
+          (if (zero? num1) 
+              (num-val 1) 
+              (num-val 0)))))
+    (diff-exp (exp1 exp2)
+      (let ((val1 (value-of exp1 env)) 
+            (val2 (value-of exp2 env))) 
+        (let ((num1 (expval->num val1)) 
+              (num2 (expval->num val2))) 
+          (num-val (- num1 num2)))))
+    (addition-exp (exp1 exp2)
+      (let ((val1 (value-of exp1 env)) 
+            (val2 (value-of exp2 env))) 
+        (let ((num1 (expval->num val1)) 
+              (num2 (expval->num val2))) 
+          (num-val (+ num1 num2)))))
+    (multiplication-exp (exp1 exp2)
+      (let ((val1 (value-of exp1 env)) 
+            (val2 (value-of exp2 env))) 
+        (let ((num1 (expval->num val1)) 
+              (num2 (expval->num val2))) 
+          (num-val (* num1 num2)))))
+    (if-exp (exp1 exp2 exp3)
+      (let ((val1 (value-of exp1 env)))
+          (if (not (= (expval->num val1) 0))
+              (value-of exp2 env)
+              (value-of exp3 env))))
+    (nameless-var-exp (lexical_address)
+      (apply-nameless-env env lexical_address))
+    (nameless-let-exp (val_exp body_exp)
+      (let ((val (value-of val_exp env)))
+        (value-of body_exp (extend-nameless-env val env))))
+    (nameless-proc-exp (proc_exp)
+        (proc-val (procedure proc_exp
+                             env)))
+    (call-exp (rator rand)
+      (let ((proc (expval->proc (value-of rator env)))
+            (arg (value-of rand env)))
+        (apply-procedure proc arg)))
+))
+
+; (define extend-nameless-env
+;   (lambda (val nameless_env) 
+;     (cons val nameless_env)))
 ; 
-; (define value-of-program
-;   (lambda (pgm)
-;     (cases program pgm
-; 	   (a-program (exp1)
-; 		      (value-of exp1 empty_init_env)))))
-
-; (define empty_init_env (empty-env))
-
-; (define (value-of exp env)
-;   (cases expression exp
-;     (const-exp (num)
-;       (num-val num))
-;     (var-exp (var) 
-;       (apply-env env var))
-;     (zero?-exp (exp1)
-;       (let ((val1 (value-of exp1 env))) 
-;         (let ((num1 (expval->num val1))) 
-;           (if (zero? num1) 
-;               (num-val 1) 
-;               (num-val 0)))))
-;     (diff-exp (exp1 exp2)
-;       (let ((val1 (value-of exp1 env)) 
-;             (val2 (value-of exp2 env))) 
-;         (let ((num1 (expval->num val1)) 
-;               (num2 (expval->num val2))) 
-;           (num-val (- num1 num2)))))
-;     (addition-exp (exp1 exp2)
-;       ; (eopl:pretty-print "debug value-of addition-exp ...")
-;       ; (eopl:pretty-print "exp1---------------")
-;       ; (eopl:pretty-print exp1)
-;       ; (eopl:pretty-print "exp2---------------")
-;       ; (eopl:pretty-print exp2)
-;       ; (eopl:pretty-print "env---------------")
-;       ; (eopl:pretty-print env)
-;       (let ((val1 (value-of exp1 env)) 
-;             (val2 (value-of exp2 env))) 
-;         (let ((num1 (expval->num val1)) 
-;               (num2 (expval->num val2))) 
-;           (num-val (+ num1 num2)))))
-;     (multiplication-exp (exp1 exp2)
-;       (let ((val1 (value-of exp1 env)) 
-;             (val2 (value-of exp2 env))) 
-;         (let ((num1 (expval->num val1)) 
-;               (num2 (expval->num val2))) 
-;           (num-val (* num1 num2)))))
-;     (if-exp (exp1 exp2 exp3)
-;       (let ((val1 (value-of exp1 env)))
-;           (if (not (= (expval->num val1) 0))
-;               (value-of exp2 env)
-;               (value-of exp3 env))))
-;     (let-exp (vars exps body)
-;       (let ((val_exps (map (lambda (exp_item) 
-;                           (value-of exp_item env))
-;                        exps)))
-;         (value-of body (extend-env vars val_exps env))))
-;     (proc-exp (var body) 
-;       ; (eopl:pretty-print "debug value-of proc-exp ...")
-;       ; (eopl:pretty-print "var in create time---------------")
-;       ; (eopl:pretty-print var)
-;       ; (eopl:pretty-print "body in create time---------------")
-;       ; (eopl:pretty-print body)
-;       ; (eopl:pretty-print "env in create time---------------")
-;       ; (eopl:pretty-print env)
-;         (proc-val (procedure var 
-;                              body 
-;                              env)))
-;     (call-exp (rator rand)
-;       ; (eopl:pretty-print "debug value-of call-exp ...")
-;       ; (eopl:pretty-print "rator---------------")
-;       ; (eopl:pretty-print rator)
-;       ; (eopl:pretty-print "rand---------------")
-;       ; (eopl:pretty-print rand)
-;       ; (eopl:pretty-print "env ---------------")
-;       ; (eopl:pretty-print env)
-;       (let ((proc (expval->proc (value-of rator env)))
-;             (arg (value-of rand env)))
-;         (apply-procedure proc arg)))
-; ))
+;  (nameless-var-exp  ; 存储lexical address
+;   (lexical_address number?))
+;  (nameless-let-exp
+;   (val_exp expression?)
+;   (body_exp expression?))
+;  (nameless-proc-exp
+;   (proc_exp expression?))
 
 ;  ; Program → Nameless-program
 (define translation-of-program
   (lambda (pgm) 
     (cases program pgm 
       (a-program (exp1) 
-        (a-program (translation-of exp1 (init-senv)))))))
+        (a-program (translation-of exp1 empty_init_static_env))))))
 
 ;  translation-of will take two arguments: an expression and a static environment.
 (define translation-of
@@ -305,8 +252,8 @@
         (nameless-var-exp (apply-senv senv var)))
       ; ?
       (let-exp (var exp1 body) 
-        (eopl:pretty-print "let-exp ====")
-        (eopl:pretty-print senv)
+        ; (eopl:pretty-print "let-exp ====")
+        ; (eopl:pretty-print senv)
         (nameless-let-exp (translation-of exp1 senv) 
                           (translation-of body (extend-senv var senv)))) 
       (proc-exp (var body) 
@@ -343,14 +290,19 @@
           (else 
             (+ 1 (apply-senv (cdr senv) 
                              var))))))
-; ? i v x
-(define init-senv
-  (lambda () 
-    ;(extend-senv 'i 
-    ;             (extend-senv 'v 
-    ;                          (extend-senv 'x 
-                                           (empty-senv)))
-    ;                                       )))
+
+(define empty_init_static_env (empty-senv))
+
+; 暂时不需要init-senv
+;  
+;  ; ? i v x
+;  (define init-senv
+;    (lambda () 
+;      ;(extend-senv 'i 
+;      ;             (extend-senv 'v 
+;      ;                          (extend-senv 'x 
+;                                             (empty-senv)))
+;      ;                                       )))
 
 ; (eopl:pretty-print (scan&parse
 ; "
@@ -388,20 +340,57 @@
 ;  )
 ;  ;)
 
+; p93页例子, 手写测试ast
+; (eopl:pretty-print
+; (value-of-program
+; (translation-of-program
+; (a-program
+;   (let-exp 'x
+;            (const-exp 37)
+;            (proc-exp 'y
+;                      (let-exp 'z
+;                               (diff-exp (var-exp 'y)
+;                                         (var-exp 'x))
+;                               (diff-exp (var-exp 'x)
+;                                         (var-exp 'y)))))
+; )
+; )
+; )
+; )
 (eopl:pretty-print
+(value-of-program
 (translation-of-program
 (a-program
   (let-exp 'x
            (const-exp 37)
-           (proc-exp 'y
-                     (let-exp 'z
-                              (diff-exp (var-exp 'y)
-                                              (var-exp 'x))
-                              (diff-exp (var-exp 'x)
-                                        (var-exp 'y)))))
+           (let-exp 'proc_01
+                    (proc-exp 'y
+                              (let-exp 'z
+                                       (diff-exp (var-exp 'y)
+                                                 (var-exp 'x))
+                                       (diff-exp (var-exp 'z)
+                                                 (const-exp 80))))
+                    (call-exp (var-exp 'proc_01)
+                              (const-exp 10))))
 )
 )
 )
+)
+;let x = 37
+;in let proc_01 = proc (y)
+;                  let z = -(y,x)   ; -27
+;                  in -(z,80)    ; -27 - 80 = -107
+;   in (proc_01 10)
+
+(eopl:pretty-print (run
+"
+let x = 37
+in let proc_01 = proc (y)
+                  let z = -(y,x)
+                  in -(z,80)
+   in (proc_01 10)
+"
+))
 
 
 
