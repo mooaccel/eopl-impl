@@ -182,3 +182,12 @@ ch3.4的各种习题做了之后, 对在lexical binding下怎么实现递归(单
 
 > 题外话: 各种习题背后可能都需要明白一个道理=> 在interface/specification不变的情况下, 改变implementation/representation没关系
 > 不会影响其他模块代码, 能很好的进行重构.
+
+## 3.5 Scoping and Binding of Variables
+3.5 没啥干货
+
+## 3.6 Eliminating Variable Names 
+3.6 nameless, 可以把variable的名字优化掉
+
+## 3.7 Implementing Lexical Addressing
+3.7 讲3.6的实现.
