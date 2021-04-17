@@ -1,5 +1,6 @@
 ; 代码copy from 3_26.scm
 ; 把free variable优化删除了
+; letrec参考了ch3/3_34/3_34_v2.scm
 #lang eopl
 
 (define empty-store 
