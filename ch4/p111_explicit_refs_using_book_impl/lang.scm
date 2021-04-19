@@ -5,7 +5,7 @@
   
   (require "drscheme-init.scm")
   
-  (provide (all-defined-out))
+  (provide (all-defined-out))  ; 里面包含expression?, provide应该要在当前文件执行完成之后才能知道哪些需要导出吧?
 
   ;;;;;;;;;;;;;;;; grammatical specification ;;;;;;;;;;;;;;;;
   
@@ -19,7 +19,7 @@
       (number ("-" digit (arbno digit)) number)
       ))
   
-  (define the-grammar
+  (define the-grammar           ; 经过sllgen处理, 生成define-datatype那些, 然后就有了expression?
     '((program (expression) a-program)
 
       (expression 
