@@ -43,9 +43,9 @@
 ;;;;;;;;;;;;;;;; procedures ;;;;;;;;;;;;;;;;
   (define-datatype proc proc?
     (procedure
-      (var symbol?)
+      (vars (list-of symbol?))
       (body expression?)
-      (env environment?)))
+      (env environment?)))  ; 创建proc时保存当时的env(如果想优化参考3_26)
   
   (define-datatype environment environment?
     (empty-env)
@@ -68,7 +68,7 @@
 	      (empty-env () '())
 	      (extend-env (vars val_refs saved-env)
 	        (cons
-	          (list vars val_refs)
+	          (list 'vars: vars 'val_refs: val_refs)  ; 为了可读性.
 	          (env->list saved-env)))
       )))
 	      ; (extend-env-rec* (p-names b-vars p-bodies saved-env)
@@ -84,8 +84,8 @@
       (cases expval val
 	      (proc-val (p)
 	        (cases proc p
-	          (procedure (var body saved-env)
-	            (list 'procedure var '... (env->list saved-env)))))
+	          (procedure (vars body saved-env)
+	            (list 'procedure vars 'body... 'saved_env: (env->list saved-env)))))
 	      (else val))))
 
 

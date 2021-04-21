@@ -6,7 +6,7 @@
   (define test-list
     '(
 
-      (let-multiarg
+      (let-multi-arg
         "
         let a = 100
             b = 200
@@ -20,7 +20,14 @@
         "
         -280)
 
-     ))
+      (proc-multi-arg
+        "
+        let f = proc (x y) -(x, y)
+        in (f 3 -4)
+        "
+        7)
+
+    ))
 )
 
   ; (eopl:pretty-print 

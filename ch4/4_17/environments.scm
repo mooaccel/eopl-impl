@@ -7,9 +7,18 @@
 
 ;;;;;;;;;;;;;;;; initial environment ;;;;;;;;;;;;;;;;
   ; 用于测试, 随便选个初始都行
+  ; (define init-env 
+  ;   (lambda () 
+  ;     (empty-env)))
   (define init-env 
-    (lambda () 
-      (empty-env)))
+    (lambda ()
+      (extend-env (list 'i) 
+                  (list (newref (num-val 1)))
+                  (extend-env (list 'v) 
+                              (list (newref (num-val 5)))
+                              (extend-env (list 'x) 
+                                          (list (newref (num-val 10)))
+                                          (empty-env))))))
 
 ;;;;;;;;;;;;;;;; environment constructors and observers ;;;;;;;;;;;;;;;;
 

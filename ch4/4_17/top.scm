@@ -54,7 +54,8 @@
   (instrument_let #t)
   (instrument_newref #t)
 
-  ; (eopl:pretty-print (run-one 'let-multiarg))
+  ;(eopl:pretty-print (run-one 'let-multi-arg))
+  ;(run-all)
+  (eopl:pretty-print (run-one 'proc-multi-arg))
 
-  (run-all)
 )

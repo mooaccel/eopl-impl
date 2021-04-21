@@ -47,11 +47,11 @@
        let-exp)
 
       (expression
-       ("proc" "(" identifier ")" expression)
+       ("proc" "(" (arbno identifier) ")" expression)
        proc-exp)
 
       (expression
-       ("(" expression expression ")")
+       ("(" expression (arbno expression) ")")
        call-exp)
 
       ; (expression
@@ -95,12 +95,12 @@
     ;  (var identifier?)
     ;  (val expression?)
     ;  (body expression?))
-    (proc-exp
-      (var identifier?)
-      (body expression?))
-    (call-exp
-      (rator expression?)
-      (rand expression?))
+    ; (proc-exp
+    ;   (var identifier?)
+    ;   (body expression?))
+    ; (call-exp
+    ;   (rator expression?)
+    ;   (rand expression?))
     ; (letrec-exp
     ;   (listof_proc_name (list-of identifier?))
     ;   (listof_bound_vars (list-of identifier?))
@@ -110,12 +110,12 @@
       (vars (list-of identifier?))
       (vals (list-of expression?))
       (body expression?))
-    ; (proc-exp  ; 待改成多参数
-    ;  (vars (list-of identifier?))
-    ;  (body expression?))
-    ; (call-exp
-    ;  (rator expression?)
-    ;  (rands (list-of expression?)))
+    (proc-exp
+     (vars (list-of identifier?))
+     (body expression?))
+    (call-exp
+     (rator expression?)
+     (rands (list-of expression?)))
     ; (letrec-exp
     ;  (listof_proc_name (list-of identifier?))
     ;  (listof_bound_vars (list-of (list-of identifier?)))

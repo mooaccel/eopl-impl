@@ -67,14 +67,16 @@
                                   (newref val_item))
                                vals_of_exps)
                           env))))
-        
-        (proc-exp (var body)
-          (proc-val (procedure var body env)))
 
-        (call-exp (rator rand)
+        (proc-exp (vars body)
+          (proc-val (procedure vars body env)))
+
+        (call-exp (rator rands)
           (let ((proc (expval->proc (value-of rator env)))
-                (arg (value-of rand env)))
-            (apply-procedure proc arg)))
+                (args (map (lambda (rand)
+                              (value-of rand env))
+                           rands)))
+            (apply-procedure proc args)))
 
         ; (letrec-exp (p-names b-vars p-bodies letrec-body)
         ;   (value-of letrec-body
@@ -105,32 +107,34 @@
         )))
 
   ;; apply-procedure : Proc * ExpVal -> ExpVal
-  ;; 
   ;; uninstrumented version
   ;;   (define apply-procedure
   ;;    (lambda (proc1 arg)
   ;;      (cases proc proc1
   ;;        (procedure (bvar body saved-env)
   ;;          (value-of body (extend-env bvar arg saved-env))))))
-
   ;; instrumented version
   (define apply-procedure
-    (lambda (proc1 val)
+    (lambda (proc1 vals)
       (cases proc proc1
-        (procedure (var body saved-env)
-      	    (let ((new-env (extend-env (list var) 
-                                       (list (newref val)) 
+        (procedure (vars body saved-env)
+      	    (let ((new_env (extend-env vars
+                                       (map (lambda (val)
+                                                (newref val))
+                                            vals) 
                                        saved-env)))
+              ; 在apply-procedure内部debug输出
       	      (when (instrument_let)
       		          (begin
       		            (eopl:printf
-      		              "entering body of proc ~s with env =~%"
-      		              var)
-      		            (pretty-print (env->list new-env))
-                      (eopl:printf "store =~%")
+      		              "entering body of proc ~s with env =\n"
+      		              vars)
+      		            (pretty-print (env->list new_env))
+                      (eopl:printf "store =\n")
                       (pretty-print (store->readable (get-store-as-list)))
-                      (eopl:printf "~%")))
-              (value-of body new-env))))))
+                      (eopl:printf "\n")
+                      ))
+              (value-of body new_env))))))
 
 
   ;; store->readable : Listof(List(Ref,Expval)) 
@@ -139,8 +143,10 @@
     (lambda (l)
       (map
         (lambda (p)
-          (cons
+          (list
+            'ref:
             (car p)
+            'content_of_ref:
             (expval->printable (cadr p))))
         l)))
  
