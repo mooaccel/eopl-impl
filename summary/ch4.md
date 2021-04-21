@@ -45,13 +45,32 @@ value of var-exp 需要 (deref (apply-env env var))
 IMPLICIT-REFS的引用有关的这些操作在concrete syntax层看不见...所以隐式, 
 而explicit refs语言需要在语法层指明...所以是显式
 ```
+---
 
-* 一个问题
+#### 一个问题
+
 ```C
 ch4.3的这句话
 This design is called call-by-value, or implicit references.
 怎么理解?
 主要是This design is called call-by-value不太懂.
+```
+一些理解如下(猜测为什么叫call-by-value可能有如下原因):
+```scheme
+; 在ch4/p120_implicit_refs运行以下代码
+; 比如这段代码: 会产生新的一份存储吧.
+  (instrument_let #t)
+  (instrument_newref #t)
+  (eopl:pretty-print 
+    (run "let aa = 100
+          in let f = proc (x)
+                      begin
+                        set x = -(x,-1); 
+                        -(x,10)
+                      end
+             in (f aa)"))
+可以发现x和aa binding到了不同的content, 也即在store处于不同的位置, 它们是不同的两个变量了!
+; todo 其他更好的理解待后续再补充
 ```
 
 ---
