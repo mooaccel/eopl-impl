@@ -66,9 +66,9 @@
     (lambda (env)
       (cases environment env
 	      (empty-env () '())
-	      (extend-env (sym val saved-env)  ; val现在是引用
+	      (extend-env (vars val_refs saved-env)
 	        (cons
-	          (list sym val)
+	          (list vars val_refs)
 	          (env->list saved-env)))
       )))
 	      ; (extend-env-rec* (p-names b-vars p-bodies saved-env)
