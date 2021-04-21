@@ -111,18 +111,18 @@
   ;;   (define apply-procedure
   ;;    (lambda (proc1 arg)
   ;;      (cases proc proc1
-  ;;        (procedure (bvar body saved-env)
-  ;;          (value-of body (extend-env bvar arg saved-env))))))
+  ;;        (procedure (bvar body saved_env)
+  ;;          (value-of body (extend-env bvar arg saved_env))))))
   ;; instrumented version
   (define apply-procedure
     (lambda (proc1 vals)
       (cases proc proc1
-        (procedure (vars body saved-env)
+        (procedure (vars body saved_env)
       	    (let ((new_env (extend-env vars
                                        (map (lambda (val)
                                                 (newref val))
                                             vals) 
-                                       saved-env)))
+                                       saved_env)))
               ; 在apply-procedure内部debug输出
       	      (when (instrument_let)
       		          (begin

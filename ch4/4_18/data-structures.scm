@@ -52,12 +52,12 @@
     (extend-env 
       (vars (list-of symbol?))
       (val_refs (list-of reference?))       ; env保存的是ref
-      (saved-env environment?))
+      (saved_env environment?))
     (extend-env-rec
       (listof_proc_name (list-of identifier?))
       (listof_bound_vars (list-of (list-of identifier?)))
       (listof_proc_body (list-of expression?))
-      (saved-env environment?))
+      (saved_env environment?))
   )
 
   ;; env->list : Env -> List
@@ -66,10 +66,10 @@
     (lambda (env)
       (cases environment env
 	      (empty-env () '())
-	      (extend-env (vars val_refs saved-env)
+	      (extend-env (vars val_refs saved_env)
 	        (cons
 	          (list 'vars: vars 'val_refs: val_refs)  ; 为了可读性.
-	          (env->list saved-env)))
+	          (env->list saved_env)))
         (extend-env-rec (listof_proc_name listof_bound_vars listof_proc_body saved_env)
 	        (cons
 	          (list 'letrec listof_proc_name '...)
@@ -84,8 +84,8 @@
       (cases expval val
 	      (proc-val (p)
 	        (cases proc p
-	          (procedure (vars body saved-env)
-	            (list 'procedure vars 'body... 'saved_env: (env->list saved-env)))))
+	          (procedure (vars body saved_env)
+	            (list 'procedure vars 'body... 'saved_env: (env->list saved_env)))))
 	      (else val))))
 
 

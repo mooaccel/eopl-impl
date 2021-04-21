@@ -28,11 +28,11 @@
       (cases environment env
         (empty-env ()
           (eopl:error 'apply-env "No binding for ~s" search-sym))
-        (extend-env (vars val_refs saved-env)
+        (extend-env (vars val_refs saved_env)
           (cond ((location search-sym vars)
                   => (lambda (idx) 
                         (list-ref val_refs idx)))
-                (else (apply-env saved-env search-sym))))
+                (else (apply-env saved_env search-sym))))
         (extend-env-rec (listof_proc_name listof_bound_vars listof_proc_body saved_env)
           (cond 
             ((location search-sym listof_proc_name)
