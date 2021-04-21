@@ -43,8 +43,7 @@
        if-exp)
 
       (expression
-       ;("let" (arbno identifier "=" expression) "in" expression)
-       ("let" identifier "=" expression "in" expression)
+       ("let" (arbno identifier "=" expression) "in" expression)
        let-exp)
 
       (expression
@@ -55,11 +54,11 @@
        ("(" expression expression ")")
        call-exp)
 
-      (expression
-        ("letrec"
-          (arbno identifier "(" identifier ")" "=" expression)
-           "in" expression)
-        letrec-exp)
+      ; (expression
+      ;   ("letrec"
+      ;     (arbno identifier "(" identifier ")" "=" expression)
+      ;      "in" expression)
+      ;   letrec-exp)
       
       ;; new for explicit-refs
       (expression
@@ -92,25 +91,25 @@
      (exp1 expression?) 
      (exp2 expression?) 
      (exp3 expression?))
-    (let-exp
-     (var identifier?)
-     (val expression?)
-     (body expression?))
+    ; (let-exp
+    ;  (var identifier?)
+    ;  (val expression?)
+    ;  (body expression?))
     (proc-exp
       (var identifier?)
       (body expression?))
     (call-exp
       (rator expression?)
       (rand expression?))
-    (letrec-exp
-      (listof_proc_name (list-of identifier?))
-      (listof_bound_vars (list-of identifier?))
-      (listof_proc_body (list-of expression?))
-      (letrec_body expression?))
-    ; (let-exp
-    ;  (vars (list-of identifier?))
-    ;  (vals (list-of expression?))
-    ;  (body expression?))
+    ; (letrec-exp
+    ;   (listof_proc_name (list-of identifier?))
+    ;   (listof_bound_vars (list-of identifier?))
+    ;   (listof_proc_body (list-of expression?))
+    ;   (letrec_body expression?))
+    (let-exp
+      (vars (list-of identifier?))
+      (vals (list-of expression?))
+      (body expression?))
     ; (proc-exp  ; 待改成多参数
     ;  (vars (list-of identifier?))
     ;  (body expression?))

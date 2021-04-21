@@ -50,14 +50,15 @@
   (define-datatype environment environment?
     (empty-env)
     (extend-env 
-      (var symbol?)
-      (val reference?)       ; 现在env保存ref
+      (vars (list-of symbol?))
+      (val_refs (list-of reference?))       ; env保存的是ref
       (saved-env environment?))
-    (extend-env-rec*
-      (proc-names (list-of symbol?))
-      (b-vars (list-of symbol?))
-      (proc-bodies (list-of expression?))
-      (saved-env environment?)))
+  )
+    ;(extend-env-rec*
+    ;  (proc-names (list-of symbol?))
+    ;  (b-vars (list-of symbol?))
+    ;  (proc-bodies (list-of expression?))
+    ;  (saved-env environment?)))
 
   ;; env->list : Env -> List
   ;; used for pretty-printing and debugging
@@ -69,10 +70,11 @@
 	        (cons
 	          (list sym val)
 	          (env->list saved-env)))
-	      (extend-env-rec* (p-names b-vars p-bodies saved-env)
-	        (cons
-	          (list 'letrec p-names '...)
-	          (env->list saved-env))))))
+      )))
+	      ; (extend-env-rec* (p-names b-vars p-bodies saved-env)
+	      ;   (cons
+	      ;     (list 'letrec p-names '...)
+	      ;     (env->list saved-env))))))
 
   ;; expval->printable : ExpVal -> List
   ;; returns a value like its argument, except procedures get cleaned

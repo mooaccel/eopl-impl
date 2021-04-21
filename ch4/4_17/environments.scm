@@ -6,20 +6,10 @@
   (provide init-env empty-env extend-env apply-env)
 
 ;;;;;;;;;;;;;;;; initial environment ;;;;;;;;;;;;;;;;
-  ; i, v, x 没啥必要... 空就行...
-  ;; init-env : () -> Env
+  ; 用于测试, 随便选个初始都行
   (define init-env 
-    (lambda ()
-      (extend-env 
-        'i (newref (num-val 1))
-        (extend-env
-          'v (newref (num-val 5))
-          (extend-env
-            'x (newref (num-val 10))
-            (empty-env))))))
-  ;(define init-env 
-  ;  (lambda () 
-  ;    (empty-env)))
+    (lambda () 
+      (empty-env)))
 
 ;;;;;;;;;;;;;;;; environment constructors and observers ;;;;;;;;;;;;;;;;
 
@@ -29,22 +19,12 @@
       (cases environment env
         (empty-env ()
           (eopl:error 'apply-env "No binding for ~s" search-sym))
-        (extend-env (var val saved-env)
-	        (if (eqv? search-sym var)
-	            val
-	            (apply-env saved-env search-sym)))
-        (extend-env-rec* (p-names b-vars p-bodies saved-env)  ; extend-env-rec*和extend-env-rec一样吧? 就是命名区别?
-          (cond 
-            ((location search-sym p-names)
-             => (lambda (n)
-                  (newref     ; apply-env目前返回的是ref
-                    (proc-val
-                      (procedure 
-                        (list-ref b-vars n)
-                        (list-ref p-bodies n)
-                        env)))))
-            (else (apply-env saved-env search-sym))
-          )))))
+        (extend-env (vars val_refs saved-env)
+          (cond ((location search-sym vars)
+                  => (lambda (idx) 
+                        (list-ref val_refs idx)))
+                (else (apply-env saved-env search-sym))))
+          )))
 
   (define location
     (lambda (sym syms)

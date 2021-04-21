@@ -57,10 +57,16 @@
               (value-of exp2 env)
               (value-of exp3 env))))
 
-        (let-exp (var exp1 body)       
-          (let ((val1 (value-of exp1 env)))
+        (let-exp (vars exps body)       
+          (let ((vals_of_exps (map (lambda (exp_item) 
+                                      (value-of exp_item env))
+                                   exps)))
             (value-of body
-              (extend-env var (newref val1) env))))  ; 现在env的val存的都是ref
+              (extend-env vars 
+                          (map (lambda (val_item) 
+                                  (newref val_item))
+                               vals_of_exps)
+                          env))))
         
         (proc-exp (var body)
           (proc-val (procedure var body env)))
@@ -70,9 +76,9 @@
                 (arg (value-of rand env)))
             (apply-procedure proc arg)))
 
-        (letrec-exp (p-names b-vars p-bodies letrec-body)
-          (value-of letrec-body
-            (extend-env-rec* p-names b-vars p-bodies env)))
+        ; (letrec-exp (p-names b-vars p-bodies letrec-body)
+        ;   (value-of letrec-body
+        ;     (extend-env-rec* p-names b-vars p-bodies env)))
 
         (begin-exp (exp1 exps)
           (letrec 
@@ -112,7 +118,9 @@
     (lambda (proc1 val)
       (cases proc proc1
         (procedure (var body saved-env)
-      	    (let ((new-env (extend-env var (newref val) saved-env)))
+      	    (let ((new-env (extend-env (list var) 
+                                       (list (newref val)) 
+                                       saved-env)))
       	      (when (instrument_let)
       		          (begin
       		            (eopl:printf
