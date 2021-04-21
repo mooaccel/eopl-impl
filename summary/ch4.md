@@ -35,6 +35,16 @@ IMPLICIT-REFS语言的env全是ref, 不再直接存expval, 即
 ExpVal = Int + Bool + Proc 
 DenVal = Ref(ExpVal)
 ```
+指到学会IMPLICIT-REFS语言的设计, 才体会到之前ch3所说的ExpVal可以和DenVal不同是什么意思...
+> eopl ch3.2.2 p61 Chapter 4 presents languages in which expressed and denoted values are different. 指的就是这里
+```C
+既然学到了这里, 再回过头来理解下第三章的
+Each language has at least two such sets: the expressed values and the denoted values. 
+The expressed values are the possible values of expressions, and the denoted values are 
+the values bound to variables.
+denoted values代表variables绑定到什么值上面, 体现在实现上就是env的variable value pair的value
+在env里varibale binding to value, value的范围即denoted values集合.
+```
 
 ```C
 IMPLICIT-REFS语言所有的var-exp都是引用...
