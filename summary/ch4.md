@@ -17,7 +17,7 @@ DenVal = Int + Bool + Proc + Ref(ExpVal)
 
 * IMPLICIT-REFS语言在EXPLICIT-REFS的基础上改成了所有的var-exp都是引用.
 
-> 从4.3以后, 参考了https://github.com/mwand/eopl3代码的组织方式, 还是放到多个文件里更清晰.
+> 从4.3以后, 参考了 (https://github.com/mwand/eopl3) 代码的组织方式, 还是放到多个文件里更清晰.
 
 ### two-level查找
 > When a variable appears in an expression, we first look up the identifier in the environment 
