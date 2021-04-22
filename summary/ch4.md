@@ -91,6 +91,8 @@ This design is called call-by-value, or implicit references.
 
 ### 通过4.22/23/24...这几道题, 理解expression和statement的区别
 
+>  基于4.22这个语言, 设计出来的程序有点像C/C++风格, statement通过side effect实现计算
+
 类似4.3 IMPLICIT-REFS语言
 4_22的ExpVal和DenVal也是:
 ```
