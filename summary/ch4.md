@@ -116,8 +116,10 @@ expression和statement的比较重要的区别是:
 while expressions always return a result and often do not have side effects at all." (https://alvinalexander.com/scala/fp-book/note-about-expression-oriented-programming/)
 * statement依赖side effect, 而expression倾向于没有side effect
 
-#### 扩展部分(eopl上没有的)
 ```
+
+#### 扩展部分(eopl上没有的)
+
 C/C++普遍使用statements, 依赖side effect, 用于表示各种状态.
 FP家族的语言, 倾向于没有side effect.
 > In functional programming, side effects are rarely used. The lack of side effects makes it easier 
