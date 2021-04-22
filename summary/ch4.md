@@ -88,3 +88,47 @@ This design is called call-by-value, or implicit references.
 * 目前的例子里面(ch4.2/ch4.3)的这些, store的实现都非常naive
 
 * 注意一点, 貌似ch4.2/ch4.3目前这些例子的store都是在不断的扩充(利用), 而不回收...(ref数字在不断增大)
+
+### 通过4.22/23/24...这几道题, 理解expression和statement的区别
+
+类似4.3 IMPLICIT-REFS语言
+4_22的ExpVal和DenVal也是:
+```
+ExpVal = Int + Bool + Proc 
+DenVal = Ref(ExpVal)
+```
+
+---
+
+```C
+4.22题目的背后重点是添加了statement!
+
+然后通过做这几道题理解了expression和statement的区别, 之前的例子一直都是在用expression的
+expression-oriented风格是之前章节的风格, 这种风格普遍出现在函数式编程语言里. 
+* All functional programming languages are expression-oriented(https://en.wikipedia.org/wiki/Expression-oriented_programming_language)
+```
+
+```
+expression和statement的比较重要的区别是:
+"Statements do not return results and are executed solely for their side effects, 
+while expressions always return a result and often do not have side effects at all." (https://alvinalexander.com/scala/fp-book/note-about-expression-oriented-programming/)
+* statement依赖side effect, 而expression倾向于没有side effect
+
+#### 扩展部分(eopl上没有的)
+```
+C/C++普遍使用statements, 依赖side effect, 用于表示各种状态.
+FP家族的语言, 倾向于没有side effect.
+> In functional programming, side effects are rarely used. The lack of side effects makes it easier 
+> to do formal verifications of a program. Functional languages such as Standard ML, Scheme and Scala 
+> do not restrict side effects, but it is customary for programmers to avoid them. (https://en.wikipedia.org/wiki/Side_effect_(computer_science))
+
+```C
+还有一个概念是Referential transparency(https://en.wikipedia.org/wiki/Referential_transparency)
+Referential transparency and referential opacity are properties of parts of computer programs. 
+An expression is called referentially transparent if it can be replaced with 
+its corresponding value (and vice-versa) without changing the program's behavior.
+This requires that the expression be pure, that is to say the expression value must be 
+the same for the same inputs and its evaluation must have no side effects. 
+An expression that is not referentially transparent is called referentially opaque.
+```
+有Referential transparency才能memoization optimization...
