@@ -54,19 +54,69 @@
    (instrument_let #t)
    (instrument_newref #t)
 
-  ;(eopl:pretty-print (run-one 'let-multi-arg))
-  ;(run-all)
-  ;(eopl:pretty-print (run-one 'letrec-test-case-01))
+  ; (eopl:pretty-print (run
+  ; "
+  ;   let p = proc (x) set x = 4
+  ;   in let a = 3
+  ;      in begin 
+  ;           (p a); 
+  ;           a 
+  ;         end
+  ; "
+  ; ))
 
-  (eopl:pretty-print (run
-  "
-    let p = proc (x) set x = 4
-    in let a = 3
-       in begin 
-            (p a); 
-            a 
-          end
-  "
-  ))
+  ; (eopl:pretty-print (run
+  ;   "
+  ;   let f = proc (x) set x = 44
+  ;     in let g = proc (y) (f y)
+  ;        in let z = 55
+  ;           in begin (g z); z end
+  ;   "
+  ; ))
+
+  ;(eopl:pretty-print (run
+  ;  "
+  ;    let swap = proc (x) proc (y) 
+  ;                          let temp = x 
+  ;                          in begin
+  ;                              set x = y;
+  ;                              set y = temp 
+  ;                             end            
+  ;    in let a = 33            
+  ;       in let b = 44            
+  ;          in begin            
+  ;              ((swap a) b); 
+  ;              -(a,b) 
+  ;             end
+  ;  "))
+
+  ; 或者这样写, 效果是一样的, 参考exer3.20
+  ; (eopl:pretty-print (run
+  ;   "
+  ;     let swap = proc (x y)
+  ;                   let temp = x 
+  ;                   in begin
+  ;                       set x = y;
+  ;                       set y = temp 
+  ;                      end            
+  ;     in let a = 33            
+  ;            b = 44            
+  ;        in begin            
+  ;             (swap a b); 
+  ;             -(a,b) 
+  ;           end
+  ;   "))
+
+  ; (eopl:pretty-print (run
+  ;   "
+  ;   let b = 3
+  ;   in let p = proc (x) proc(y) 
+  ;                         begin
+  ;                           set x = 4;
+  ;                           y
+  ;                         end 
+  ;      in ((p b) b)
+  ;   "
+  ; ))
 
 )
