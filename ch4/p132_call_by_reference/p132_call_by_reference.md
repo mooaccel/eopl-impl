@@ -1,4 +1,4 @@
-ch4/p132_call_by_reference基于4_19的IMPLICIT-REFS语言, 在它的基础上改apply-procedure有关的部分
+ch4/p132_call_by_reference基于ch4/4_19的IMPLICIT-REFS语言, 在它的基础上改apply-procedure有关的部分
 
 > 同样的例子可以在ch4/p132_call_by_reference和ch4/4_19中都运行一下, 对比加深理解
 
