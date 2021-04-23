@@ -136,3 +136,10 @@ the same for the same inputs and its evaluation must have no side effects.
 An expression that is not referentially transparent is called referentially opaque.
 ```
 有Referential transparency才能memoization optimization...
+
+## 4.4 MUTABLE-PAIRS: A Language with Mutable Pairs
+
+ch4.4在ch4.3IMPLICIT-REFS语言的基础上增加mutable-list
+关键是需要注意ch4/p125_mutable_pairs/p125示例图解.png中所示的问题, 怎么进行共享的. 其实类似于C/C++传指针...
+
+## 4.5 Parameter-Passing Variations
