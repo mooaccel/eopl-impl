@@ -25,9 +25,9 @@
 
       (expression (identifier) var-exp)
 
-      ;(expression
-      ;  ("-" "(" expression "," expression ")")
-      ;  diff-exp)
+      (expression
+        ("-" "(" expression "," expression ")")
+        diff-exp)
       
       (expression
        ("zero?" "(" expression ")")

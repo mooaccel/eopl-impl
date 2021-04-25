@@ -64,20 +64,40 @@
 
    ;; ===================
  
-   (eopl:pretty-print (value-of-program-v2
-          (scan&parse
-              "
-              letrec p(x) = x 
-              in if b 
-                 then 3 
-                 else 4
-              "
-          )
-          (extend-env 'b 
-                      (bool-val #t)
-                      (empty-env))
-          (end-cont)
-        ))
+   ; (eopl:pretty-print (value-of-program-v2
+   ;        (scan&parse
+   ;            "
+   ;            letrec p(x) = x 
+   ;            in if b 
+   ;               then 3 
+   ;               else 4
+   ;            "
+   ;        )
+   ;        (extend-env 'b 
+   ;                    (bool-val #t)
+   ;                    (empty-env))
+   ;        (end-cont)
+   ;      ))
+   ;(eopl:pretty-print (value-of-program-v2
+   ;       (scan&parse
+   ;           "
+   ;           let x = 20
+   ;           in let y = 11
+   ;              in if b
+   ;                 then -(x, y)
+   ;                 else -(y, x)
+   ;           "
+   ;       )
+   ;       (extend-env 'b
+   ;                   (bool-val #t)
+   ;                   (empty-env))
+   ;       (end-cont)
+   ;     ))
+   (eopl:pretty-print (run
+            "
+            -(-(44, 11),
+              3)
+            "))
 
   
   )

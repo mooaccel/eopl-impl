@@ -85,6 +85,7 @@
   ;      )))
 
   (define value-of/k
+    ; exp整个代表一个值, 它最终返回一个值...
     (lambda (exp env cont)  ; cont是exp的continuation
       ; (eopl:pretty-print "Enter value-of/k...")
       ; (eopl:pretty-print "exp = ")
@@ -103,13 +104,11 @@
           (apply-cont cont
                       (apply-env env var)))
 
-        ;(diff-exp (exp1 exp2)
-        ;  (let ((val1 (value-of exp1 env))
-        ;        (val2 (value-of exp2 env)))
-        ;    (let ((num1 (expval->num val1))
-        ;          (num2 (expval->num val2)))
-        ;      (num-val
-        ;        (- num1 num2)))))
+        (diff-exp (exp1 exp2)  ; cont是diff-exp的continuation
+          ; value-of exp1, exp2之后再去计算某些东西, 然后再进入原先的cont
+          (value-of/k exp1
+                      env
+                      (diff1-cont exp2 env cont))) ; 多久触发这个diff1-cont? 在exp1得到结果后, apply-cont
 
         ; cont是zero?-exp的continuation
         (zero?-exp (exp1)
@@ -143,25 +142,34 @@
 
         )))
 
-(define (apply-cont cont val) 
-  (cases continuation cont 
-    (end-cont () 
-      (begin 
-        (eopl:printf "End of computation.~%") 
-        val)) 
-      (zero1-cont (saved_cont) 
-        (apply-cont saved_cont 
-          (bool-val (zero? (expval->num val)))))
-      (let-exp-cont (var body saved_env saved_cont)
-        (value-of/k body
-                    (extend-env var val saved_env)
-                    saved_cont))
-      (if-test-cont (exp2 exp3 saved_env saved_cont)
-        (if (expval->bool val)
-            (value-of/k exp2 saved_env saved_cont)
-            (value-of/k exp3 saved_env saved_cont)))
-  ))
-
+  (define (apply-cont cont val) 
+    (cases continuation cont 
+      (end-cont () 
+        (begin 
+          (eopl:printf "End of computation.~%") 
+          val)) 
+        (zero1-cont (saved_cont) 
+          (apply-cont saved_cont 
+            (bool-val (zero? (expval->num val)))))
+        (let-exp-cont (var body saved_env saved_cont)
+          (value-of/k body
+                      (extend-env var val saved_env)
+                      saved_cont))
+        (if-test-cont (exp2 exp3 saved_env saved_cont)
+          (if (expval->bool val)
+              (value-of/k exp2 saved_env saved_cont)
+              (value-of/k exp3 saved_env saved_cont)))
+        (diff1-cont (exp2 env saved_cont)
+          (value-of/k exp2
+                      env
+                      (diff2-cont val ; exp1的结果存起来
+                                  saved_cont)))         
+        (diff2-cont (val1 saved_cont)
+          (let ((num1 (expval->num val1))
+                (num2 (expval->num val)))
+            (apply-cont saved_cont  ; 得到diff-exp的结果后, 返回原先diff-exp的continuation(即saved_cont)
+                        (num-val (- num1 num2)))))
+    ))
 
   ;; apply-procedure : Proc * ExpVal -> ExpVal
 
@@ -171,7 +179,7 @@
   ;      (procedure (var body saved-env)
   ;        (value-of body (extend-env var arg saved-env))))))
   
-  )
+)
   
 
 

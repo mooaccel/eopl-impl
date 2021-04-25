@@ -80,6 +80,13 @@
       (exp2 expression?) 
       (exp3 expression?) 
       (env environment?) 
-      (cont continuation?)))
-
+      (cont continuation?))
+    (diff1-cont
+      (exp2 expression?)
+      (env environment?)
+      (cont continuation?))
+    (diff2-cont
+      (val1 expval?)
+      (cont continuation?))
+      )
 )
