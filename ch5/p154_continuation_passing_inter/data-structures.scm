@@ -88,12 +88,19 @@
     (diff2-cont
       (val1 expval?)
       (cont continuation?))
-    (call-exp-rand-cont 
-      (rator expression?)
+    (rator-cont
+      (rand expression?)
       (env environment?)
       (cont continuation?))
-    (call-exp-rator-cont 
-      (rand expval?)
+    (rand-cont
+      (rator expval?)  ; 保存rator expval
       (cont continuation?))
+    ;(call-exp-rand-cont 
+    ;  (rator expression?)
+    ;  (env environment?)
+    ;  (cont continuation?))
+    ;(call-exp-rator-cont 
+    ;  (rand expval?)
+    ;  (cont continuation?))
   )
 )
