@@ -86,6 +86,13 @@
 
   (define value-of/k
     (lambda (exp env cont)  ; cont是exp的continuation
+      ; (eopl:pretty-print "Enter value-of/k...")
+      ; (eopl:pretty-print "exp = ")
+      ; (eopl:pretty-print exp)
+      ; (eopl:pretty-print "env = ")
+      ; (eopl:pretty-print env)
+      ; (eopl:pretty-print "cont = ")
+      ; (eopl:pretty-print cont)
       (cases expression exp
 
         (const-exp (num)

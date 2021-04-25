@@ -74,14 +74,10 @@
               "
           )
           (extend-env 'b 
-                      (bool-val #f)
+                      (bool-val #t)
                       (empty-env))
           (end-cont)
         ))
 
   
   )
-
-
-
-
