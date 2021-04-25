@@ -130,10 +130,14 @@
           (apply-cont cont
                       (proc-val (procedure var body env))))
 
-        ;(call-exp (rator rand)
-        ;  (let ((proc (expval->proc (value-of rator env)))
-        ;        (arg (value-of rand env)))
-        ;    (apply-procedure proc arg)))
+        (call-exp (rator rand)
+          (value-of/k rand
+                      env
+                      (call-exp-rand-cont rator env cont)))
+
+;          (let ((proc (expval->proc (value-of rator env)))
+;                (arg (value-of rand env)))
+;            (apply-procedure proc arg)))
 
         (letrec-exp (p-name b-var p-body letrec-body)
           (value-of/k letrec-body
@@ -169,18 +173,21 @@
                 (num2 (expval->num val)))
             (apply-cont saved_cont  ; 得到diff-exp的结果后, 返回原先diff-exp的continuation(即saved_cont)
                         (num-val (- num1 num2)))))
+        (call-exp-rand-cont (rator env saved_cont)
+          (value-of/k rator 
+                      env
+                      (call-exp-rator-cont val saved_cont)))
+        (call-exp-rator-cont (rand saved_cont)
+          (let ((proc1 (expval->proc val)))
+            (apply-procedure proc1 rand saved_cont)))
     ))
 
-  ;; apply-procedure : Proc * ExpVal -> ExpVal
-
-  ;(define apply-procedure
-  ;  (lambda (proc1 arg)
-  ;    (cases proc proc1
-  ;      (procedure (var body saved-env)
-  ;        (value-of body (extend-env var arg saved-env))))))
+  (define apply-procedure
+    (lambda (proc1 arg cont)
+      (cases proc proc1
+        (procedure (var body saved_env)
+          (value-of/k body 
+                      (extend-env var arg saved_env)
+                      cont)))))
   
 )
-  
-
-
-  

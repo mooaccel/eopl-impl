@@ -93,11 +93,14 @@
    ;                   (empty-env))
    ;       (end-cont)
    ;     ))
-   (eopl:pretty-print (run
-            "
-            -(-(44, 11),
-              3)
-            "))
+   ;(eopl:pretty-print (run
+   ;         "
+   ;         -(-(44, 11),
+   ;           3)
+   ;         "))
+   ;(eopl:pretty-print (run-one
+   ;   'simple-letrec-1))
+   (run-all)
 
   
   )

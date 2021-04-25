@@ -45,9 +45,9 @@
        ("proc" "(" identifier ")" expression)
        proc-exp)
 
-      ;(expression
-      ; ("(" expression expression ")")
-      ; call-exp)
+      (expression
+       ("(" expression expression ")")
+       call-exp)
 
       (expression
         ("letrec"
