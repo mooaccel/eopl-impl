@@ -202,6 +202,10 @@
                       (list-exp-cont-remaining val saved_cont)))
 
         (list-exp-cont-remaining (car_val saved_cont)
+          ;(eopl:pretty-print "In list-exp-cont-remaining")
+          ;(eopl:printf "car_val = ~s." car_val)
+          ;(eopl:pretty-print "saved_cont = ")
+          (eopl:pretty-print saved_cont)
           (apply-cont saved_cont
                       (pair-val car_val
                                 val)))
