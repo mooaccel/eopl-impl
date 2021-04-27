@@ -66,6 +66,13 @@
   (instrument_value_of_k #f)
   (instrument_apply_cont #f)
   (instrument_value_of_k_call_exp #t)
+
+  ; 最大size = 3
+  ; (eopl:pretty-print (run
+  ; " 
+  ; -(-(44,11),3)
+  ; " 
+  ; ))
  
 ;  ; let+proc不能递归, 所以得用letrec
 ;  (eopl:pretty-print (run
