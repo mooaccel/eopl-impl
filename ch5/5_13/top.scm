@@ -63,25 +63,28 @@
           (else (eopl:error 'run-one "no such test: ~s" test-name))))))
 
    ;; ===================
+  (instrument_value_of_k #t)
+  (instrument_apply_cont #t)
  
   ; let+proc不能递归, 所以得用letrec
-  ;(eopl:pretty-print (run
-  ;" 
-  ;letrec fact(x) = if zero?(x) 
-  ;                 then 1
-  ;                 else *(x, (fact -(x, 1)))
-  ;in (fact 4)
-  ;"
-  ;))
   (eopl:pretty-print (run
-  " 
-  letrec factiteracc(n, acc) = 
-                   if zero?(n) 
-                   then acc
-                   else (factiteracc -(n, 1) *(acc, n))
-  in let factiter = proc(n) (factiteracc n 1)
-     in (factiter 4)
-  " 
+  "
+  letrec fact(x) = if zero?(x)
+                   then 1
+                   else *(x, (fact -(x, 1)))
+  in (fact 4)
+  "
   ))
+
+  ; (eopl:pretty-print (run
+  ; " 
+  ; letrec factiteracc(n, acc) = 
+  ;                  if zero?(n) 
+  ;                  then acc
+  ;                  else (factiteracc -(n, 1) *(acc, n))
+  ; in let factiter = proc(n) (factiteracc n 1)
+  ;    in (factiter 4)
+  ; " 
+  ; ))
 
   )
