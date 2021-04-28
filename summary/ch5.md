@@ -51,7 +51,7 @@ In such languages, one solution is to use a technique called trampolining.
 
 #### 不是tail call可以用trampolining技巧吗?
 
-> 结论: 不行.
+> 结论: 貌似不行.
 
 why? 基于ch4/p120_implicit_refs, 测试
 ```scheme
@@ -71,3 +71,5 @@ why? 基于ch4/p120_implicit_refs, 测试
 ```
 
 而基于continuation改造的解释器都是tail call的
+
+> 但是感觉如果目的是为了得到计算的snapshot, 从而形成暂停, 恢复, 可以用其他技术实现保存现场, 恢复现场吧. 比如内核里的中断处理, process context switch, 用户态coroutine context switch等
