@@ -36,8 +36,6 @@
       (cases expression exp
 
         (const-exp (num)
-          (eopl:pretty-print "In const-exp")
-          (eopl:pretty-print num)
           (apply-cont cont
                       (num-val num)))
 
