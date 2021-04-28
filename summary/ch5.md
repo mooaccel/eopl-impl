@@ -38,7 +38,7 @@ In such languages, one solution is to use a technique called trampolining.
 
 本质上是在中间的位置可以暂停计算? 而不用一口气算到底... 
 
-> Each zero-argument procedure returned by apply-procedure/k represents a snapshot of the computation in progress.
+> Each zero-argument procedure returned by apply-procedure/k represents a **snapshot** of the computation in progress.
 
 
 ---
