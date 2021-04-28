@@ -143,3 +143,48 @@ ch4.4在ch4.3IMPLICIT-REFS语言的基础上增加mutable-list
 关键是需要注意ch4/p125_mutable_pairs/p125示例图解.png中所示的问题, 怎么进行共享的. 其实类似于C/C++传指针...
 
 ## 4.5 Parameter-Passing Variations
+
+### natural parameter passing
+ch3的语言是Natural parameter passing的, denoted value与expressed value一样.
+
+### call-by-value
+从ch4.3 IMPLICIT-REFS开始, 出现call-by-value, denoted value是expressed value的引用
+
+### call-by-reference
+
+有些时候传location可能更好, 不重新分配expressed value, 多个ref(location)共享一个expressed value
+
+ch4.5.1 call-by-reference
+
+> Under call-by-reference, variables still denote references to expressed values, just as they did under call-by-value(ch4 p132):
+``` 
+ExpVal = Int + Bool + Proc 
+DenVal = Ref(ExpVal)
+```
+> The only thing that changes is the allocation of new locations.
+
+> 后面的习题4.35是道不错的题, 达到的效果是: 语言还是处于call-by-value框架下, 但是在局部范围设计成可以支持call-by-reference
+
+> C/C++传指针就属于call-by-reference
+
+---
+
+前面讨论的parameter-passing mechanisms都是eager的, 4.5.2 开始转向lazy evaluation
+
+> Under lazy evaluation, an operand in a procedure call is not evaluated until it is needed by the procedure body. If the body never refers to the parameter, then there is no need to evaluate it.
+
+### call-by-name
+
+Call by name if it is used several times, it is re-evaluated each time it appears. 
+
+> call-by-name没有做什么习题, 可能理解上还没那么深刻
+
+### call-by-need
+
+Call by need is a [memoized](https://en.wikipedia.org/wiki/Memoization) variant of call by name
+
+If the argument is [pure](https://en.wikipedia.org/wiki/Pure_function) (i.e., free of side effects), this produces the same results as call by name, saving the cost of recomputing the argument.
+
+如果impure, call by need和call by name那么就可能不一样了...
+
+> Haskell (Hudak et al., 1990) was the first practical language to use call-by-need. [附录A]
