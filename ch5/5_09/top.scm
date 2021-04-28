@@ -84,6 +84,16 @@
   ;(run-one 'fact-of-6)
   ;)
 
+  ;(eopl:pretty-print (run-one 
+  ;  'gensym-test
+  ;))
+  ;(eopl:pretty-print (run-one 
+  ;  'ch4_5_1_example_01
+  ;))
+  ;(eopl:pretty-print (run-one 
+  ;  'ch4_5_1_example_02
+  ;))
+
   (run-all)
 
 

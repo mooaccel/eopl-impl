@@ -84,6 +84,7 @@
                      (value-of-begins (car es) (cdr es)))))))
             (value-of-begins exp1 exps)))
 
+        ; 最好还是返回一个值, 这样更符合expression和statement的区别
         ; (assign-exp (ident exp1)
         ;   (begin
         ;     (let ((val_of_exp1 (value-of exp1 env)))

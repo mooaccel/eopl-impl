@@ -74,10 +74,9 @@
       ;   ("begin" expression (arbno ";" expression) "end")
       ;   begin-exp)
 
-      ; todo
-      ;(expression
-      ;  ("set" identifier "=" expression)
-      ;  set-exp)
+      (expression
+        ("set" identifier "=" expression)
+        set-exp)
       ))
 
   ;;;;;;;;;;;;;;;; sllgen boilerplate ;;;;;;;;;;;;;;;;

@@ -126,6 +126,11 @@
     (rand-cont
       (rator expval?)  ; 保存rator expval
       (cont continuation?))
+    (set-rhs-cont 
+      (ident symbol?)
+      (env environment?) 
+      (cont continuation?))
+
   )
 
 

@@ -86,6 +86,11 @@
                         (extend-env-rec proc_name bound_var proc_body env)
                         cont))
 
+          (set-exp (ident exp1)
+            (value-of/k exp1
+                        env
+                        (set-rhs-cont ident env cont)))
+
         ))))
 
   (define (apply-cont cont val) 
@@ -141,6 +146,14 @@
           (rand-cont (rator saved_cont)
             (let ((proc1 (expval->proc rator)))
               (apply-procedure proc1 val saved_cont)))
+          
+          (set-rhs-cont (ident env saved_cont)
+            (begin
+              (setref! (apply-env env ident)
+                       val)
+              (apply-cont saved_cont (num-val 34))))  ; 给原先的cont随便返回一个值就行
+                                                      ; 或者改成返回ref设置之前, 之后的值
+
       )))
 
   ;(define apply-procedure
