@@ -40,6 +40,7 @@ In such languages, one solution is to use a technique called trampolining.
 
 > Each zero-argument procedure returned by apply-procedure/k represents a **snapshot** of the computation in progress.
 
+> 感觉任何地方都可以加一层lambda () (...), 然后可以暂停?(毕竟是snapshot, 具有接下来运行所需的所有信息), 形象点的理解就是把一段计算分成多个子部分(想在哪划分, 就把lambda () (...)这一层套上去就行). 
 
 ---
 
