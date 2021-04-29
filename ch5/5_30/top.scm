@@ -64,19 +64,13 @@
 
    ;; ===================
  
-   (run-all)
-   ; 5 - (2 - 5) = 8
-   ;(eopl:pretty-print (run
-   ;"
-   ;let a = 3
-   ;in let p = proc (x) -(x,a)
-   ;   in let a = 5
-   ;      in -(a,(p 2))
-   ;"
-   ;))
-   ;(eopl:pretty-print (run-one 
-   ; 'dynamic-binding-test-case-01
-   ; ))
+   ;(run-all)
 
+    (instrument_value_of_k #t)
+    (instrument_apply_cont #t)
+
+    (eopl:pretty-print (run-one 
+     'dynamic-binding-test-case-01
+     ))
   
   )

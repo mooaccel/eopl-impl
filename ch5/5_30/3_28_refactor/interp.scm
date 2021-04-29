@@ -1,9 +1,5 @@
 (module interp (lib "eopl.ss" "eopl")
   
-  ;; interpreter for the LETREC language.  The \commentboxes are the
-  ;; latex code for inserting the rules into the code in the book.
-  ;; These are too complicated to put here, see the text, sorry.
-
   (require "drscheme-init.scm")
 
   (require "lang.scm")
