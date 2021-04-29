@@ -63,17 +63,39 @@
   (instrument_let #t)
   (instrument_newref #t)
 
-  (eopl:pretty-print 
-    (run "let f = proc (x) 
-                    proc (y) 
-                      begin 
-                        set x = -(x,-1); 
-                        -(x,y) 
-                      end
-          in ((f 44) 33)")
-  )
+  ;(eopl:pretty-print 
+  ;  (run "let f = proc (x) 
+  ;                  proc (y) 
+  ;                    begin 
+  ;                      set x = -(x,-1); 
+  ;                      -(x,y) 
+  ;                    end
+  ;        in ((f 44) 33)")
+  ;)
+
+(eopl:pretty-print (run
+"
+let x = 0
+in letrec even(dummy) = if zero?(x) 
+                   then 1 
+                   else begin 
+                          set x = -(x, 1);
+                          (odd 999)
+                        end
+          odd(dummy) = if zero?(x)
+                  then 0
+                   else begin 
+                          set x = -(x, 1);
+                          (even 999)
+                        end
+   in let d = set x = 13
+      in 
+          (odd 999)
+"
+))
 
 )
+
 
 
 

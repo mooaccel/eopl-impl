@@ -85,17 +85,13 @@
             (value-of-begins exp1 exps)))
 
         ; 最好还是返回一个值, 这样更符合expression和statement的区别
-        ; (assign-exp (ident exp1)
-        ;   (begin
-        ;     (let ((val_of_exp1 (value-of exp1 env)))
-        ;       (setref! (apply-env env ident) 
-        ;                val_of_exp1))
-        ;     (num-val 34)))
-        ; 下面这样也可以...
-        (assign-exp (ident exp1)
-            (let ((val_of_exp1 (value-of exp1 env)))
-              (setref! (apply-env env ident) 
-                       val_of_exp1)))
+         (assign-exp (ident exp1)
+           (begin
+             (let ((val_of_exp1 (value-of exp1 env)))
+               (setref! (apply-env env ident) 
+                        val_of_exp1))
+             (num-val 34)
+           ))
             
         )))
 
