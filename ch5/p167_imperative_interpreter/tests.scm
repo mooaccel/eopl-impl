@@ -65,14 +65,14 @@
       (nested-procs2 "let f = proc(x) proc (y) -(x,y) in ((f -(10,5)) 6)"
         -1)
       
-;      (y-combinator-1 "
-;        let fix =  proc (f)
-;                    let d = proc (x) proc (z) ((f (x x)) z)
-;                    in proc (n) ((f (d d)) n)
-;        in let
-;            t4m = proc (f) proc(x) if zero?(x) then 0 else -((f -(x,1)),-4)
-;        in let times4 = (fix t4m)
-;           in (times4 3)" 12)
+      (y-combinator-1 "
+        let fix =  proc (f)
+                    let d = proc (x) proc (z) ((f (x x)) z)
+                    in proc (n) ((f (d d)) n)
+        in let
+            t4m = proc (f) proc(x) if zero?(x) then 0 else -((f -(x,1)),-4)
+        in let times4 = (fix t4m)
+           in (times4 3)" 12)
       
        ;; simple letrecs
       (simple-letrec-1 "letrec f(x) = -(x,1) in (f 33)" 32)
