@@ -6,7 +6,7 @@
   (require "drscheme-init.scm")
   (require "data-structures.scm")  ; for expval constructors
   (require "lang.scm")             ; for scan&parse
-  (require "interp.scm")           ; for value-of-program
+  (require "interp_precedual_representation.scm")           ; for value-of-program
   (require "tests.scm")            ; for test-list
   (require "environments.scm")     ; for empty-env
   
@@ -81,9 +81,10 @@
    ;(eopl:pretty-print (run-one
    ; 'nested-procs
    ;))
-   (eopl:pretty-print (run
-    "-(-(50, 30), 9)"
-   ))
+   ;(eopl:pretty-print (run
+   ; "-(-(50, 30), 9)"
+   ;))
+   (run-all)
 
   
   )
