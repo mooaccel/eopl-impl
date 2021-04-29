@@ -61,33 +61,34 @@
       (saved-env environment?))
     )
 
-  ;(define-datatype continuation continuation?
-  ;  (end-cont) 
-  ;  (zero1-cont 
-  ;    (cont continuation?)) 
-  ;  (let-exp-cont 
-  ;    (var symbol?)   ; todo
-  ;    (body expression?) 
-  ;    (env environment?) 
-  ;    (cont continuation?))
-  ;  (if-test-cont 
-  ;    (exp2 expression?) 
-  ;    (exp3 expression?) 
-  ;    (env environment?) 
-  ;    (cont continuation?))
-  ;  (diff1-cont
-  ;    (exp2 expression?)
-  ;    (env environment?)
-  ;    (cont continuation?))
-  ;  (diff2-cont
-  ;    (val1 expval?)
-  ;    (cont continuation?))
-  ;  (rator-cont
-  ;    (rand expression?)
-  ;    (env environment?)
-  ;    (cont continuation?))
-  ;  (rand-cont
-  ;    (rator expval?)  ; 保存rator expval
-  ;    (cont continuation?))
-  ;)
+  (define-datatype continuation continuation?
+    (end-cont) 
+    (zero1-cont 
+      (cont continuation?)) 
+    (let-exp-cont 
+      (var symbol?)   ; todo
+      (body expression?) 
+      (env environment?) 
+      (cont continuation?))
+    (if-test-cont 
+      (exp2 expression?) 
+      (exp3 expression?) 
+      (env environment?) 
+      (cont continuation?))
+    (diff1-cont
+      (exp2 expression?)
+      (env environment?)
+      (cont continuation?))
+    (diff2-cont
+      (val1 expval?)
+      (cont continuation?))
+    (rator-cont
+      (rand expression?)
+      (env environment?)
+      (cont continuation?))
+    (rand-cont
+      (rator expval?)  ; 保存rator expval
+      (env environment?)
+      (cont continuation?))
+  )
 )
