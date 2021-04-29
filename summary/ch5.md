@@ -73,3 +73,23 @@ why? 基于ch4/p120_implicit_refs, 测试
 而基于continuation改造的解释器都是tail call的
 
 > 但是感觉如果目的是为了得到计算的snapshot, 从而形成暂停, 恢复, 可以用其他技术实现保存现场, 恢复现场吧. 比如内核里的中断处理, process context switch, 用户态coroutine context switch等
+
+
+## 5.3 An Imperative Interpreter
+ch5.3将ch5.1的例子重构为Imperative Interpreter
+> 参考ch5/p167_imperative_interpreter/p167_imperative_interpreter.md
+
+> 5.3是一种优化技术, 本质上计算过程还是ch5.1的那些
+
+**A 0-argument tail call is the same as a jump.**
+
+```C
+0-argument tail call类似于goto这种jump
+
+不是tail call的话, 可能其他地方还存在control context信息(比如fact的实现), 光用一个program counter转移执行位置, 而不进行上下文切换之类的可能还不行. (如果不是tail call, 直接jump不行, 本质原因感觉是由于上下文信息不足, 所以不能简单的只有program counter决定转移)
+
+但是如果获取到了足够多的信息, 就可以简单的jump, (比如5.3把信息保存在全局变量里), 这种优化把带参数的procedure transform成了不带参数的procedure, 形成了tail call
+这样跳转之后, 所需要的上下文信息都有, 所以可以简单的改成jump
+```
+
+5.3的优化让我们更加贴近机器语言一点
