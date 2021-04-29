@@ -189,7 +189,7 @@
                                 val)))
         
         (try-cont (var handler_exp saved_env saved_cont)
-          (apply-cont val saved_cont))  ; 通过apply-cont try-cont val到这里, 说明是正常值
+          (apply-cont saved_cont val))  ; 通过apply-cont try-cont val到这里, 说明是正常值
 
         (raise-cont (saved_cont)
           (apply-handler val saved_cont))  ;处理val, 即exception
@@ -197,7 +197,7 @@
     ))
 
   (define apply-handler
-    (lambda (val cont) 
+    (lambda (val cont)   ; 参数顺序无所谓吧
       (cases continuation cont 
         (try-cont (var handler_exp saved_env saved_cont) 
           (value-of/k handler_exp   ; exception handler

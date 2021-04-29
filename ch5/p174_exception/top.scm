@@ -133,7 +133,7 @@
                                            else -((inner cdr(lst)), -1)
               in proc (lst)
                     try (inner lst) catch (x) -(x,2)
-   in ((index 5) list(2, 3))
+   in ((index 3) list(2, 3))
    "
    ))
   
