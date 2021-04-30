@@ -43,6 +43,11 @@
                       env
                       (diff1-cont exp2 env cont))) ; 多久触发这个diff1-cont? 在exp1得到结果后, apply-cont
 
+        (division-exp (exp1 exp2)
+          (value-of/k exp1
+                      env
+                      (division1-cont exp2 env cont)))
+
         ; cont是zero?-exp的continuation
         (zero?-exp (exp1)
           (value-of/k exp1        ; value-of/k exp1内部会触发apply-cont
@@ -105,16 +110,16 @@
                             env
                             (list-exp-cont-car remaining_exps env cont)))))
         (try-exp (exp1 var handler_exp)  ; cont是try-exp的continuation
-          (eopl:pretty-print "In try-exp")
-          (eopl:pretty-print cont)
+          ;(eopl:pretty-print "In try-exp")
+          ;(eopl:pretty-print cont)
           (value-of/k exp1  ; 正常值或exception.最后送入try-cont
                       env
                       (try-cont var handler_exp env cont)))  ; 进入try-cont的方式有两种, apply-cont或者apply-handler
 
         (raise-exp (exp1)  ; raise-exp的cont是什么? 感觉是一层一层的套在try-cont之上的
-          (eopl:pretty-print "In raise-exp")
-          (eopl:pretty-print cont)
-          (eopl:pretty-print "==== In raise-exp ====")
+          ;(eopl:pretty-print "In raise-exp")
+          ;(eopl:pretty-print cont)
+          ;(eopl:pretty-print "==== In raise-exp ====")
           (value-of/k exp1  ; exception
                       env
                       (raise-cont cont)))
@@ -150,6 +155,21 @@
                 (num2 (expval->num val)))
             (apply-cont saved_cont  ; 得到diff-exp的结果后, 返回原先diff-exp的continuation(即saved_cont)
                         (num-val (- num1 num2)))))
+        (division1-cont (exp2 saved_env saved_cont)
+          (value-of/k exp2
+                      saved_env
+                      (division2-cont val
+                                      saved_env
+                                      saved_cont)))         
+        (division2-cont (val1 saved_env saved_cont)
+          (let ((num1 (expval->num val1))
+                (num2 (expval->num val)))
+            (if (= num2 0)
+                (value-of/k (raise-exp (const-exp -1))  ; 暂时抛这个吧
+                            saved_env
+                            saved_cont)
+                (apply-cont saved_cont
+                            (num-val (/ num1 num2))))))
         (rator-cont (rand saved_env saved_cont)
           (value-of/k rand
                       saved_env
@@ -216,6 +236,10 @@
         (diff1-cont (exp2 saved_env saved_cont) 
           (apply-handler val saved_cont)) 
         (diff2-cont (val1 saved_cont) 
+          (apply-handler val saved_cont))
+        (division1-cont (exp2 saved_env saved_cont) 
+          (apply-handler val saved_cont)) 
+        (division2-cont (val1 saved_env saved_cont) 
           (apply-handler val saved_cont))
         (rator-cont (rand saved_env saved_cont)
           (apply-handler val saved_cont))
