@@ -141,17 +141,7 @@
    ;     catch (x cont) raise 7
    ; catch (y cont) y"
    ;))
-   (eopl:pretty-print (run
-   "try try -(3, raise 5)
-        catch (x c) (c raise 7)
-      catch (y c) (c y)"
-   ))
-
-   (eopl:pretty-print (run
-   "-(try try -(3, raise 5)
-        catch (x c) (c raise 7)
-      catch (y c) (c y), 100)"
-   ))
+   (run-all)
 
   
   )

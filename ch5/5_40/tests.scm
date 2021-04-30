@@ -97,5 +97,20 @@ in let times4 = (fix t4m)
    in letrec  odd(x)  = if zero?(x) then 0 else ((even odd) -(x,1))
    in (odd 13)" 1)
 
-      ))
+    (5_40_test_case_01
+    "try try -(3, raise 5)
+         catch (x c) (c raise 7)
+       catch (y c) (c y)"
+     7
+    )
+
+    (5_40_test_case_02
+    "-(try try -(3, raise 5)
+         catch (x c) (c raise 7)
+       catch (y c) (c y), 100)"
+    -93
+    )
+
+    ))
+
   )
