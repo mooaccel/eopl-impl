@@ -107,3 +107,7 @@ ch5.3将ch5.1的例子重构为Imperative Interpreter
 ```
 
 ## 5.4
+
+1. 彻底理解了exception handle, 以及怎么实现它
+
+2. 通过5.4节的最后几个习题(5.42/43/44), 学会了call/cc的原理
