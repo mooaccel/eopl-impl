@@ -97,5 +97,39 @@ in let times4 = (fix t4m)
    in letrec  odd(x)  = if zero?(x) then 0 else ((even odd) -(x,1))
    in (odd 13)" 1)
 
-      ))
+      (throw-to-cont-test-case-01
+       "
+        let mm = 10
+        in let ww = 21
+           in letcc cont
+              in throw -(mm, ww) to cont
+       "
+       -11)
+
+
+      (throw-to-cont-test-case-02
+      "try try -(3, letcc x in raise x)
+           catch (x) raise x
+       catch (y) throw 1 to y"
+      2)
+
+      (throw-to-cont-test-case-02
+      "
+       -(100,
+         try try -(3, letcc x in raise x)
+             catch (x) raise x
+         catch (y) throw 1 to y)
+      "
+      98)
+
+      (throw-to-cont-test-case-03
+      "
+       -(100,
+         try try -(3, letcc x in raise x)
+             catch (x) raise x
+         catch (y) 20)
+      "
+      80)
+
+    ))
   )

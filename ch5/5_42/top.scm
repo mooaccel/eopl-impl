@@ -62,75 +62,8 @@
                 (run (cadr test))))
           (else (eopl:error 'run-one "no such test: ~s" test-name))))))
 
-   ;; ===================
- 
-   ;(eopl:pretty-print (run-one
-   ;   'simple-letrec-1))
-   ;(run-all)
-   ;(run-one 'simple-let-1)
+   (test-all)
 
-   ;(eopl:pretty-print (run
-   ;   "let2 x = 5
-   ;        y = 10
-   ;    in -(y, x)"
-   ;))
-
-   ;(eopl:pretty-print (run
-   ;   "let2 x = 5
-   ;        y = 10
-   ;    in -(y, x)"
-   ;))
-
-   ; ; cons测试
-   ; (eopl:pretty-print (run
-   ;    "let a = cons(1000, 200) 
-   ;     in a"
-   ; ))
-   ; (eopl:pretty-print (run
-   ;    "let a = cons(cons(1000, 200),300)
-   ;     in a"
-   ; ))
-   ; (eopl:pretty-print (run
-   ;    "let a = emptylist
-   ;     in a"
-   ; ))
-   ; (eopl:pretty-print (run
-   ;    "let a = cons(1000, emptylist)
-   ;     in null?(a)"
-   ; ))
-   ; (eopl:pretty-print (run
-   ;    "let a = emptylist
-   ;     in null?(a)"
-   ; ))
-   ; (eopl:pretty-print (run
-   ;    "let a = cons(1000, 200) 
-   ;     in -(car(a), cdr(a))"
-   ; ))
-   ; (eopl:pretty-print (run
-   ;    "let a = cons(cons(1000, 200),300)
-   ;     in -(car(car(a)), cdr(a))"
-   ; ))
-   ; (eopl:pretty-print (run
-   ;    "let a = list(100, 200, 300)
-   ;     in a"
-   ; ))
-   ; (eopl:pretty-print (run
-   ;    "let a = list(100, 200, 300)
-   ;     in -(car(a), car(cdr(a)))"
-   ; ))
-   ; (eopl:pretty-print (run
-   ;    "let a = list(100, 200, 300)
-   ;     in -(car(a), car(cdr(cdr(a))))"
-   ; ))
-
-   (eopl:pretty-print (run
-   "
-    let mm = 10
-    in let ww = 21
-       in letcc cont
-          in throw -(mm, ww) to cont
-   "
-   ))
 
   
   )
