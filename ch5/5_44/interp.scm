@@ -132,7 +132,7 @@
           (cases expval rator
             (proc-val (proc1)
               (apply-procedure proc1 val saved_cont))
-            (cont-val (cont1)
+            (cont-val (cont1)  ; 在这种情况下可以忽略掉saved_cont, 因为cont-val里有continuation
               (apply-cont cont1 val))
             (else eopl:error "rator not proc or cont")))
         
