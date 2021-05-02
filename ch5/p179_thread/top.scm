@@ -71,10 +71,39 @@
   ; ==========
 
   (instrument_ready_queue_size #f)
-  (eopl:pretty-print (run-one 
-    3 ; 5, 20, 50 可以都试试
-    'two-non-cooperating-threads-01
-  ))
-  ;(run-all 5)
+  ;(eopl:pretty-print (run-one 
+  ;  3 ; 5, 20, 50 可以都试试
+  ;  'two-non-cooperating-threads-01
+  ;))
+  (run-all 5)
+
+
+  ;(eopl:pretty-print (run
+  ;  20
+  ;  "
+  ;  let buffer = 0
+  ;  in let producer = proc (n)
+  ;                      letrec wait(k) = if zero?(k) 
+  ;                                       then set buffer = n 
+  ;                                       else begin 
+  ;                                              print(-(k, -200)); 
+  ;                                              (wait -(k, 1)) 
+  ;                                            end
+  ;                      in (wait 5) 
+  ;     in let consumer = proc (d)
+  ;                        letrec busywait (k) = if zero?(buffer)
+  ;                                              then begin 
+  ;                                                    print(-(k, -100)); 
+  ;                                                    (busywait -(k, -1)) 
+  ;                                                   end 
+  ;                                              else buffer
+  ;                        in (busywait 0)
+  ;        in begin
+  ;            spawn(proc (d) (producer 44));
+  ;            print(1000);
+  ;            (consumer 86)
+  ;            end
+  ;  "
+  ;))
 
 )

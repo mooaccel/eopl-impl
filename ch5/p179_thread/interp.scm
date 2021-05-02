@@ -132,7 +132,7 @@
     ;      'ignore)
     (if (time-expired?)
         (begin
-          ;(eopl:pretty-print "time-expired? yes")
+          (eopl:pretty-print "time-expired? yes")
           (place-on-ready-queue!
             (lambda () (apply-cont cont val)))
           (run-next-thread))

@@ -220,6 +220,33 @@ in let times4 = (fix t4m)
   "
   33)
 
-  ))
+  ; eopl book p181
+  (producer-consumer-01
+    "
+    let buffer = 0
+    in let producer = proc (n)
+                        letrec wait(k) = if zero?(k) 
+                                         then set buffer = n 
+                                         else begin 
+                                                print(-(k, -200)); 
+                                                (wait -(k, 1)) 
+                                              end
+                        in (wait 5) 
+       in let consumer = proc (d)
+                          letrec busywait (k) = if zero?(buffer)
+                                                then begin 
+                                                      print(-(k, -100)); 
+                                                      (busywait -(k, -1)) 
+                                                     end 
+                                                else buffer
+                          in (busywait 0)
+          in begin
+              spawn(proc (d) (producer 989));
+              print(1000);
+              (consumer 86)
+              end
+    "
+  989)
       
+  ))
 )
