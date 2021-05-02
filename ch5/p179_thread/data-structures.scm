@@ -138,7 +138,11 @@
       (cont continuation?))
     (spawn-cont 
       (cont continuation?))
+    (unop-arg-cont 
+      (unary_op unop?)  ; lang.scm
+      (cont continuation?))
   )
+
 
 
 )

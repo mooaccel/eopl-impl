@@ -67,10 +67,7 @@
   ;))
 
   (run-all 5)
-  
-  
-  ;(eopl:pretty-print (run
-  ;  1 "spawn(proc(dummy) 3)"
-  ;))
+
+
 
 )

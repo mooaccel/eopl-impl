@@ -109,6 +109,11 @@
                         env
                         (spawn-cont cont)))
 
+          (unop-exp (unary_op exp)
+            (value-of/k exp 
+                        env
+                        (unop-arg-cont unary_op cont)))
+
         ))))
 
   (define (apply-cont cont val) 
@@ -203,6 +208,10 @@
                   (apply-cont saved_cont (num-val 73))  ; 随便返回的73
                 ))
 
+              (unop-arg-cont (unary_op saved_cont)
+                (apply-unop unary_op
+                            val 
+                            saved_cont))
 
       ))))
 
@@ -225,6 +234,33 @@
               (value-of/k body 
                           new_env
                           cont))))))
+
+  (define apply-unop
+    (lambda (unary_op val cont)
+      (cases unop unary_op
+
+        ;(zero?-unop ()
+        ;  (apply-cont cont
+        ;    (bool-val
+        ;      (zero? (expval->num arg)))))
+
+        ;(car-unop ()
+        ;  (let ((lst (expval->list arg)))
+        ;    (apply-cont cont (car lst))))
+        ;(cdr-unop ()
+        ;  (let ((lst (expval->list arg)))
+        ;    (apply-cont cont (list-val (cdr lst)))))
+
+        ;(null?-unop ()
+        ;  (apply-cont cont 
+        ;    (bool-val (null? (expval->list arg)))))
+
+        (print-unop ()
+          (begin
+            (eopl:printf "~a~%" (expval->num val))
+            (apply-cont cont (num-val 1))))  ; 随便返回一个值给cont
+
+        )))
 
 
 

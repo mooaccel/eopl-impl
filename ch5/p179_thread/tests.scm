@@ -164,6 +164,38 @@ in let times4 = (fix t4m)
   (simple-spawn-01 "spawn(proc(d) 3)" 73)
   (simple-spawn-02 "begin spawn(proc(d) 3); 44 end" 44)
 
+  (print-test-cases-01
+    "begin 
+      spawn(proc(dummy) 3);
+      print (30)
+     end"
+     1)
+  (print-test-cases-02
+    "begin 
+      spawn(proc(dummy) 
+                  begin 
+                    print (23);
+                    31
+                  end);
+      print (30)
+    end
+    "
+    1)
+
+;"
+;letrec 
+;  noisy (l) = if null?(l) 
+;              then 0 
+;              else begin print(car(l)); yield() ; (noisy cdr(l)) end
+;in
+;   begin
+;    spawn(proc (d) (noisy [1,2,3,4,5])) ;
+;    spawn(proc (d) (noisy [6,7,8,9,10]));
+;    print(100);
+;    33
+;   end
+;"
+
 
   ))
       

@@ -85,6 +85,20 @@
       (expression
         ("spawn" "(" expression ")")
         spawn-exp)
+      
+      ;(expression 
+      ;  ("yield" "(" ")")
+      ;  yield-exp)
+      
+      (expression
+        (unop "(" expression ")")
+        unop-exp)
+
+      ;(unop ("car") car-unop)
+      ;(unop ("cdr") cdr-unop)
+      ;(unop ("null?") null?-unop)
+      ;(unop ("zero?") zero?-unop)
+      (unop ("print") print-unop)
 
       ))
 
@@ -100,5 +114,7 @@
   
   (define just-scan
     (sllgen:make-string-scanner the-lexical-spec the-grammar))
+  
+  ;(eopl:pretty-print (show-the-datatypes))
   
   )
