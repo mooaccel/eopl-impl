@@ -146,7 +146,7 @@
               (end-main-thread-cont ()
                 (set-final-answer! val)
                 (run-next-thread))
-              (end-subthread-cont ()
+              (end-subthread-cont ()  ; 子过程返回的值最终被遗弃了, 没有用它
                 (run-next-thread))
               ;(zero1-cont (saved_cont) 
               ;  (apply-cont saved_cont 

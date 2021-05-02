@@ -106,8 +106,14 @@ ch5.3将ch5.1的例子重构为Imperative Interpreter
 如果再用上5.3的技术就可以改造成更加贴近机器语言, 更好用底层实现, 然后用类似goto这种jump替代0-argument tail call
 ```
 
-## 5.4
+## 5.4 Exceptions
 
 1. 彻底理解了exception handle, 以及怎么实现它
 
 2. 通过5.4节的最后几个习题(5.42/43/44), 学会了call/cc的原理
+
+## 5.5 Threads
+
+模拟Threads, 同时计算多个computation
+> 目前的例子假设只有单个cpu核? 也就是没有并行
+spawn接受一个过程, 然后被lambda () (apply-procedure/k ...)包装起来放入ready queue
