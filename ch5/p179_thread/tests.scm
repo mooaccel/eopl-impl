@@ -225,13 +225,13 @@ in let times4 = (fix t4m)
     "
     let buffer = 0
     in let producer = proc (n)
-                        letrec wait(k) = if zero?(k) 
+                        letrec wait1(k) = if zero?(k) 
                                          then set buffer = n 
                                          else begin 
                                                 print(-(k, -200)); 
-                                                (wait -(k, 1)) 
+                                                (wait1 -(k, 1)) 
                                               end
-                        in (wait 5) 
+                        in (wait1 5) 
        in let consumer = proc (d)
                           letrec busywait (k) = if zero?(buffer)
                                                 then begin 
@@ -247,6 +247,26 @@ in let times4 = (fix t4m)
               end
     "
   989)
+
+    ; p188, figure 5.21 A safe counter using a mutex
+    (safe-counter-test-case-01
+      "
+      let x = 0
+      in let mut = mutex()
+         in let incr_x = proc (id)
+                          proc (dummy)
+                            begin
+                              wait(mut);
+                              set x = -(x, -1);
+                              signal(mut)
+                            end
+            in begin
+                 spawn((incr_x 100));
+                 spawn((incr_x 200));
+                 spawn((incr_x 300))
+               end
+      "
+      73)
       
   ))
 )

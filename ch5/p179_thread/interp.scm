@@ -7,6 +7,7 @@
   (require "environments.scm")
   (require "store.scm")  ; initialize-store!
   (require "scheduler.scm")
+  (require "mutex.scm")
   
   (provide value-of-program 
            value-of/k 
@@ -113,7 +114,21 @@
           (spawn-exp (exp1)
             (value-of/k exp1
                         env
-                        (spawn-cont cont)))
+                        (spawn-cont cont)))            
+
+          (mutex-exp ()
+            (apply-cont cont (mutex-val (new-mutex))))
+          
+          ; wait-exp的cont是什么?
+          (wait-exp (mutex_exp)
+            (value-of/k mutex_exp
+                        env
+                        (wait-cont cont)))
+
+          (signal-exp (mutex_exp)
+            (value-of/k mutex_exp
+                        env
+                        (signal-cont cont)))
 
           (unop-exp (unary_op exp)
             (value-of/k exp 
@@ -213,6 +228,14 @@
                                          (end-subthread-cont)))) 
                   (apply-cont saved_cont (num-val 73))  ; 随便返回的73
                 ))
+
+              (wait-cont (saved_cont)
+                (wait-for-mutex (expval->mutex val)
+                                (lambda () (apply-cont saved_cont (num-val 52))))) ; 这两个52/53是随意的值, 因为在begin-exp-cont会给抛弃掉
+
+              (signal-cont (saved_cont)
+                (signal-mutex (expval->mutex val)
+                                (lambda () (apply-cont saved_cont (num-val 53))))) ; 如果signal之后还有值呢? end-cont抛弃?
 
               (unop-arg-cont (unary_op saved_cont)
                 (apply-unop unary_op

@@ -15,6 +15,8 @@
       (proc proc?))
     (list-val
       (lst (list-of expval?)))
+    (mutex-val
+      (mu mutex?))
     )
 
   ;;; extractors:
@@ -42,11 +44,22 @@
 	(list-val (lst) lst)
 	(else (expval-extractor-error 'list v)))))
 
+  (define expval->mutex
+    (lambda (v)
+      (cases expval v
+        (mutex-val (l) l)
+	(else (expval-extractor-error 'mutex v)))))
+
   (define expval-extractor-error
     (lambda (variant value)
       (eopl:error 'expval-extractors "Looking for a ~s, found ~s"
                   variant value)))
 
+;;;;;;;;;;;;;;;; mutexes ;;;;;;;;;;;;;;;;
+  (define-datatype mutex mutex?
+    (a-mutex
+      (ref_to_closed?    reference?)    ; ref to bool
+      (ref_to_wait_queue reference?)))  ; ref to (listof thread)
 
 ;;;;;;;;;;;;;;;; procedures ;;;;;;;;;;;;;;;;
   (define-datatype proc proc?
@@ -148,6 +161,10 @@
       (cont continuation?))
     (unop-arg-cont 
       (unary_op unop?)  ; lang.scm
+      (cont continuation?))
+    (wait-cont
+      (cont continuation?))
+    (signal-cont
       (cont continuation?))
   )
 
