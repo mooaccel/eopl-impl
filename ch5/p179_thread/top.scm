@@ -68,22 +68,13 @@
   ;  'ch4_5_1_example_02
   ;))
 
+  ; ==========
+
+  ;(eopl:pretty-print (run-one 
+  ;  10 ; 5, 20, 50 可以都试试
+  ;  'two-non-cooperating-threads-01
+  ;))
+
   (run-all 5)
-
-
-  ;(eopl:pretty-print (run
-  ;  5
-  ;  "let l1 = [1, 2, 3, 4, 5, 6]
-  ;   in car(cdr(cdr(l1)))"
-  ;))
-  ;(eopl:pretty-print (run
-  ;  5
-  ;  "let l1 = [1, 2]
-  ;   in null?(cdr(cdr(l1)))"
-  ;))
-
-  ;(eopl:pretty-print (run
-  ;))
-
 
 )

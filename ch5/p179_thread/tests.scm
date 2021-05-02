@@ -201,20 +201,24 @@ in let times4 = (fix t4m)
      in null?(cdr(cdr(l1)))"
     #t)
 
-;"
-;letrec 
-;  noisy (l) = if null?(l) 
-;              then 0 
-;              else begin print(car(l)); yield() ; (noisy cdr(l)) end
-;in
-;   begin
-;    spawn(proc (d) (noisy [1,2,3,4,5])) ;
-;    spawn(proc (d) (noisy [6,7,8,9,10]));
-;    print(100);
-;    33
-;   end
-;"
-
+  ; eopl book p180 example
+  (two-non-cooperating-threads-01
+  "
+  letrec noisy (l) = if null?(l) 
+                     then 0 
+                     else 
+                      begin 
+                        print(car(l)); 
+                        (noisy cdr(l)) 
+                      end 
+  in begin
+      spawn(proc (dummy) (noisy [1,2,3,4,5]));
+      spawn(proc (dummy) (noisy [6,7,8,9,10]));
+      print(100); 
+      33 
+     end
+  "
+  33)
 
   ))
       
