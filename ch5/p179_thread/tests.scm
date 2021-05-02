@@ -159,7 +159,12 @@ in let times4 = (fix t4m)
 ;                   -(x,y)
 ;                  end
 ;in ((f 44) 33)"
-;	12)
+;	12) 
+
+  (simple-spawn-01 "spawn(proc(d) 3)" 73)
+  (simple-spawn-02 "begin spawn(proc(d) 3); 44 end" 44)
+
+
+  ))
       
-      ))
-  )
+)

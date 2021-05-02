@@ -66,11 +66,11 @@
   ;  'ch4_5_1_example_02
   ;))
 
-  ;(run-all)
+  (run-all 5)
   
   
-  (eopl:pretty-print (run
-    1 "spawn(proc(dummy) 3)"
-  ))
+  ;(eopl:pretty-print (run
+  ;  1 "spawn(proc(dummy) 3)"
+  ;))
 
 )

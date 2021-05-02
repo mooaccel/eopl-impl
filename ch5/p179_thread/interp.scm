@@ -96,6 +96,12 @@
             (value-of/k exp1
                         env
                         (set-rhs-cont ident env cont)))
+
+          (begin-exp (exp1 remaining_exps)
+            (value-of/k exp1
+                        env
+                        (begin-exp-cont remaining_exps env cont)))
+
           
           ; spawn-exp的exp1应该是proc-exp吧?
           (spawn-exp (exp1)
@@ -179,6 +185,14 @@
                   (apply-cont saved_cont (num-val 34))))  ; 给原先的cont随便返回一个值就行
                                                           ; 或者改成返回ref设置之前, 之后的值
 
+              (begin-exp-cont (remaining_exps saved_env saved_cont)
+                (if (null? remaining_exps)
+                    (apply-cont saved_cont val)
+                    (value-of/k (begin-exp (car remaining_exps)  ; 如果进入这个分支, 那么val不用管了, 不需要了
+                                           (cdr remaining_exps))
+                                saved_env
+                                saved_cont)))
+
               (spawn-cont (saved_cont)
                 (let ((proc1 (expval->proc val)))  ; 这个proc有参数么?
                   (place-on-ready-queue!
@@ -188,6 +202,7 @@
                                          (end-subthread-cont)))) 
                   (apply-cont saved_cont (num-val 73))  ; 随便返回的73
                 ))
+
 
       ))))
 

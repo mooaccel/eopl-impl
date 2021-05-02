@@ -128,6 +128,10 @@
     (rand-cont
       (rator expval?)  ; 保存rator expval
       (cont continuation?))
+    (begin-exp-cont
+      (remaining_exps (list-of expression?))
+      (env environment?)
+      (cont continuation?))
     (set-rhs-cont 
       (ident symbol?)
       (env environment?) 

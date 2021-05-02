@@ -69,10 +69,10 @@
       ;   "in" expression)
       ;  letrec-exp)
     
-      ; ;; new for explicit-refs
-      ; (expression
-      ;   ("begin" expression (arbno ";" expression) "end")
-      ;   begin-exp)
+      ;; new for explicit-refs
+      (expression
+        ("begin" expression (arbno ";" expression) "end")
+        begin-exp)
 
       (expression
         ("set" identifier "=" expression)
