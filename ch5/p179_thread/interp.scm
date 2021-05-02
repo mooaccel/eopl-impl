@@ -52,11 +52,16 @@
           (var-exp (var) 
             (apply-cont cont
                         (deref (apply-env env var))))
+          
+          (const-list-exp (numbers)
+            (apply-cont cont
+                        (list-val (map num-val 
+                                       numbers))))
 
-          (zero?-exp (exp1)
-            (value-of/k exp1
-                        env 
-                        (zero1-cont cont)))
+          ;(zero?-exp (exp1)
+          ;  (value-of/k exp1
+          ;              env 
+          ;              (zero1-cont cont)))
   
           (diff-exp (exp1 exp2)
             (value-of/k exp1
@@ -142,9 +147,9 @@
                 (run-next-thread))
               (end-subthread-cont ()
                 (run-next-thread))
-              (zero1-cont (saved_cont) 
-                (apply-cont saved_cont 
-                  (bool-val (zero? (expval->num val)))))
+              ;(zero1-cont (saved_cont) 
+              ;  (apply-cont saved_cont 
+              ;    (bool-val (zero? (expval->num val)))))
               (let-exp-cont (var body saved_env saved_cont)
                 (value-of/k body
                             (extend-env var 
@@ -239,21 +244,20 @@
     (lambda (unary_op val cont)
       (cases unop unary_op
 
-        ;(zero?-unop ()
-        ;  (apply-cont cont
-        ;    (bool-val
-        ;      (zero? (expval->num arg)))))
+        (zero?-unop ()
+          (apply-cont cont
+            (bool-val
+              (zero? (expval->num val)))))
 
-        ;(car-unop ()
-        ;  (let ((lst (expval->list arg)))
-        ;    (apply-cont cont (car lst))))
-        ;(cdr-unop ()
-        ;  (let ((lst (expval->list arg)))
-        ;    (apply-cont cont (list-val (cdr lst)))))
-
-        ;(null?-unop ()
-        ;  (apply-cont cont 
-        ;    (bool-val (null? (expval->list arg)))))
+        (car-unop ()
+          (let ((lst (expval->list val)))
+            (apply-cont cont (car lst))))
+        (cdr-unop ()
+          (let ((lst (expval->list val)))
+            (apply-cont cont (list-val (cdr lst)))))
+        (null?-unop ()
+          (apply-cont cont 
+            (bool-val (null? (expval->list val)))))
 
         (print-unop ()
           (begin

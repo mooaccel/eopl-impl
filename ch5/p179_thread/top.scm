@@ -39,12 +39,14 @@
     (lambda (ans correct-ans)
       (equal? ans (sloppy->expval correct-ans))))
   
+  ; 转化成内部的值
   (define sloppy->expval 
     (lambda (sloppy-val)
       (cond
         ((number? sloppy-val) (num-val sloppy-val))
         ((boolean? sloppy-val) (bool-val sloppy-val))
-        ;((list? sloppy-val) (list-val (map sloppy->expval sloppy-val)))  ; ?
+        ((list? sloppy-val) (list-val (map sloppy->expval 
+                                           sloppy-val)))  ; ?
         (else
          (eopl:error 'sloppy->expval 
                      "Can't convert sloppy value to expval: ~s"
@@ -68,6 +70,20 @@
 
   (run-all 5)
 
+
+  ;(eopl:pretty-print (run
+  ;  5
+  ;  "let l1 = [1, 2, 3, 4, 5, 6]
+  ;   in car(cdr(cdr(l1)))"
+  ;))
+  ;(eopl:pretty-print (run
+  ;  5
+  ;  "let l1 = [1, 2]
+  ;   in null?(cdr(cdr(l1)))"
+  ;))
+
+  ;(eopl:pretty-print (run
+  ;))
 
 
 )

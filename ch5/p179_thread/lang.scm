@@ -29,6 +29,10 @@
       (expression 
         (number) 
         const-exp)
+      
+      (expression 
+        ("[" (separated-list number ",") "]")
+        const-list-exp)
 
       (expression 
         ("-" "(" expression "," expression ")") 
@@ -38,9 +42,9 @@
         ("*" "(" expression "," expression ")") 
         multiplication-exp)
       
-      (expression
-       ("zero?" "(" expression ")")
-       zero?-exp)
+      ;(expression
+      ; ("zero?" "(" expression ")")
+      ; zero?-exp)
 
       (expression
        ("if" expression "then" expression "else" expression)
@@ -94,10 +98,10 @@
         (unop "(" expression ")")
         unop-exp)
 
-      ;(unop ("car") car-unop)
-      ;(unop ("cdr") cdr-unop)
-      ;(unop ("null?") null?-unop)
-      ;(unop ("zero?") zero?-unop)
+      (unop ("car") car-unop)
+      (unop ("cdr") cdr-unop)
+      (unop ("null?") null?-unop)
+      (unop ("zero?") zero?-unop)  ; 需要一个数作为expression
       (unop ("print") print-unop)
 
       ))

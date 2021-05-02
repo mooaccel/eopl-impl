@@ -10,6 +10,8 @@
        in (f 33)"
       32)
 
+      (zero?-test-01 "zero?(10)" #f)
+      (zero?-test-02 "zero?(0)" #t)
   
       ;; simple arithmetic
       (positive-const "11" 11)
@@ -181,6 +183,23 @@ in let times4 = (fix t4m)
     end
     "
     1)
+  ; 目前还不能这么写这种结果的测试用例, todo
+  ;(const-list-test-cases-01
+  ;  "let l1 = [1, 2, 3, 4, 5, 6]
+  ;   in l1"
+  ;  (list 1 2 3 4 5 6))
+  (const-list-test-cases-02
+    "let l1 = [1, 2, 3, 4, 5, 6]
+     in car(cdr(cdr(l1)))"
+    3)
+  ;(const-list-test-cases-03
+  ;  "let l1 = [1, 2, 3, 4, 5, 6]
+  ;   in cdr(cdr(l1))"
+  ;  (list 3 4 5 6))
+  (const-list-test-cases-04
+    "let l1 = [1, 2]
+     in null?(cdr(cdr(l1)))"
+    #t)
 
 ;"
 ;letrec 

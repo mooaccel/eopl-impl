@@ -13,6 +13,8 @@
       (boolean boolean?))
     (proc-val 
       (proc proc?))
+    (list-val
+      (lst (list-of expval?)))
     )
 
   ;;; extractors:
@@ -33,6 +35,12 @@
       (cases expval v
 	(proc-val (proc) proc)
 	(else (expval-extractor-error 'proc v)))))
+
+  (define expval->list
+    (lambda (v)
+      (cases expval v
+	(list-val (lst) lst)
+	(else (expval-extractor-error 'list v)))))
 
   (define expval-extractor-error
     (lambda (variant value)
@@ -95,8 +103,8 @@
     (end-main-thread-cont)
     (end-subthread-cont)
     ;(end-cont) 
-    (zero1-cont 
-      (cont continuation?)) 
+    ;(zero1-cont 
+    ;  (cont continuation?)) 
     (let-exp-cont 
       (var symbol?)
       (body expression?) 
