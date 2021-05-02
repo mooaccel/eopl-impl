@@ -14,14 +14,15 @@
            instrument_newref
 
            instrument_value_of_k
-           instrument_apply_cont
+           ;instrument_apply_cont
+           instrument_ready_queue_size
            ) 
   ; instrument_newref在store.scm定义, 可以再更上层top.scm使用, 在中间这一层用provide
 
   (define instrument_let (make-parameter #f))
 
   (define instrument_value_of_k (make-parameter #f))
-  (define instrument_apply_cont (make-parameter #f))
+  ;(define instrument_apply_cont (make-parameter #f))
 
 ;;;;;;;;;;;;;;;; the interpreter ;;;;;;;;;;;;;;;;
 
@@ -131,7 +132,7 @@
     ;      'ignore)
     (if (time-expired?)
         (begin
-          (eopl:pretty-print "time-expired? yes")
+          ;(eopl:pretty-print "time-expired? yes")
           (place-on-ready-queue!
             (lambda () (apply-cont cont val)))
           (run-next-thread))

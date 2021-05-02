@@ -9,6 +9,11 @@
   ; 改成empty-queue?
   (define empty? null?)
 
+  (define (queue-size q)
+    (if (null? q)
+        0
+        (+ 1 (queue-size (cdr q)))))
+
   ; 返回一个新queue
   (define enqueue
     (lambda (q val)

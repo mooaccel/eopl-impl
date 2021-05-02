@@ -70,11 +70,11 @@
 
   ; ==========
 
-  ;(eopl:pretty-print (run-one 
-  ;  10 ; 5, 20, 50 可以都试试
-  ;  'two-non-cooperating-threads-01
-  ;))
-
-  (run-all 5)
+  (instrument_ready_queue_size #f)
+  (eopl:pretty-print (run-one 
+    3 ; 5, 20, 50 可以都试试
+    'two-non-cooperating-threads-01
+  ))
+  ;(run-all 5)
 
 )
