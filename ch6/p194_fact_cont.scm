@@ -9,6 +9,12 @@
         (apply-cont cont 1) 
         (fact/k (- n 1) (fact1-cont n cont)))))
 
+; fact 5
+; fact/k 5 end-cont
+; fact/k 4 (fact-cont 5 end-cont)
+; fact/k 3 (fact-cont (fact-cont 5 end-cont))
+; ...
+
 (define-datatype continuation continuation?
   (end-cont) 
   (fact1-cont 
