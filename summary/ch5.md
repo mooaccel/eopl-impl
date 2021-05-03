@@ -114,6 +114,19 @@ ch5.3将ch5.1的例子重构为Imperative Interpreter
 
 ## 5.5 Threads
 
-模拟Threads, 同时计算多个computation
-> 目前的例子假设只有单个cpu核? 也就是没有并行
+模拟Threads, 并发计算多个computation
+
+> 目前的这些例子假设只有单个cpu核, 也就是没有并行, 只模拟了单核并发
+
+> 感觉5.5也可以叫做coroutine? 不太确定. 毕竟只是用户态的上下文切换... todo 待研究, 怎么用continuation实现coroutine
+
+1. 5.5首先设计的语言只需要简单的spawn-exp即可. 在其中加入scheduler.scm, queue.scm
+scheduler从ready queue里选取下一个需要执行的thread
+
 spawn接受一个过程, 然后被lambda () (apply-procedure/k ...)包装起来放入ready queue
+
+2. 之后考虑到Figure 5.20 An unsafe counter的critical section.
+
+所以引入了mutex-exp, 以及与之配套使用的wait-exp, signal-exp, 这是一种synchronization机制(当然还有不少其他的方式)
+
+> 注意每个mutex上都有个wait-queue, 用于存放由于获取mutex失败的thread, 即blocked状态
