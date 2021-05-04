@@ -97,13 +97,25 @@ ch5.3将ch5.1的例子重构为Imperative Interpreter
 ---
 
 ```C
-一个猜想. 不知道对不对.
+一个猜想. 不知道对不对. 就是这个意思...看了下第六章
 
 学完5.1/5.2/5.3之后的一个猜想: 任何递归程序(不止interpreter吧? 毕竟interpreter也只是一个普通程序), 都可以用contination这种方式改造吧? 然后变成tail-call形式. 这就是CPS吗? 感觉得看了ch6之后才能更加确认.
 
 然后再经过5.2trampolining优化, 所以可以分成多段, 不至于爆栈(如果在没有尾递归优化的语言里), 不用一口气算完
 
 如果再用上5.3的技术就可以改造成更加贴近机器语言, 更好用底层实现, 然后用类似goto这种jump替代0-argument tail call
+```
+
+---
+
+```C
+5.2trampolining优化和5.3registerized优化, 是两个不同维度的东西, 可以都存在, 也可以只存在其中一个, 它们之间互相独立, 运用它们之前首先是需要进行cps变换, 转换成tail call形式.
+
+5.2trampolining优化运用之后不用一口气算完, 可以将computation分成多段
+5.3registerized优化运用后, 成为0-argument调用, 更加贴近机器
+
+只存在5.2trampolining优化的地方, 比如ch5/p158_trampolined_interpreter
+只存在5.3registerized优化的地方, 比如ch5/p167_imperative_interpreter
 ```
 
 ## 5.4 Exceptions
