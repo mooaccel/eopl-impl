@@ -109,7 +109,7 @@ ch5.3将ch5.1的例子重构为Imperative Interpreter
 ---
 
 ```C
-5.2trampolining优化和5.3registerized优化, 是两个不同维度的东西, 可以都存在, 也可以只存在其中一个, 它们之间互相独立, 运用它们之前首先是需要进行cps变换, 转换成tail call形式.
+5.2trampolining优化和5.3registerized优化, 是两个不同维度的东西, 可以都存在, 也可以只存在其中一个, 它们之间互相独立, 运用它们之前首先是需要进行cps变换, 转换成tail call形式.(采用data structure representation, procedural representation, procedural representation with inline三种之一的表示方法即可, 三种方法是等效的, 只不过第五章大部分用的data structure representation, 第六章exer6.7即让我们用另外两种方式重构ch5.1的例子, 让我们明白这三种方式只是表示不同而已, 都是表示continuation的方法, 其实是等效的.)
 
 5.2trampolining优化运用之后不用一口气算完, 可以将computation分成多段
 5.3registerized优化运用后, 成为0-argument调用, 更加贴近机器
