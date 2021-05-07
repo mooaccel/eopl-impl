@@ -182,6 +182,43 @@
 ;    in (f 4 -10)
 ;  "
 ;  ))
- 
+
+
+
+
+;(define fact
+;  (lambda (n)
+;    (fact/k n (lambda (val) 
+;                val))))
+;
+;(define fact/k
+;  (lambda (n cont) 
+;    (if (zero? n)
+;        (cont 1)
+;        (fact/k (- n 1) (lambda (val) 
+;                          (cont (* n val)))))))
+;
+;(eopl:pretty-print (fact 6))
+
+; 测试参数是函数, proc-val...
+;  (eopl:pretty-print (run
+;  "
+; let f = proc (g)
+;          -((g 10), 10)
+; in (f proc (x) 21)
+;  "
+;  ))
+
+  (eopl:pretty-print (run
+    " 
+    letrec factk(n cont) = if zero?(n) 
+                           then (cont 1)
+                           else (factk -(n, 1)
+                                         proc (val) 
+                                            (cont *(n, val)))
+    in (factk 5 proc (val) 
+                  val)
+  "
+  ))
 
   )
