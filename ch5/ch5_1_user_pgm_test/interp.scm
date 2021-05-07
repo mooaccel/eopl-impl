@@ -189,7 +189,12 @@
           ;              saved_cont))
           (if-test-cont (exp2 exp3 saved_env saved_cont)
             (if (expval->bool val)
-                (value-of/k exp2 saved_env saved_cont)
+                (begin
+                  (eopl:pretty-print "if then分支")
+                  (eopl:printf "exp2 = ~s exp3 = ~s~%" exp2 exp3)
+                  (eopl:printf "saved_env = ~s ~%" saved_env)
+                  (eopl:printf "saved_cont = ~s ~%" saved_cont)
+                  (value-of/k exp2 saved_env saved_cont))
                 (value-of/k exp3 saved_env saved_cont)))
           (diff1-cont (exp2 env saved_cont)
             (value-of/k exp2
