@@ -1,4 +1,10 @@
-## EOPL的做题记录
+# EOPL的做题记录
+
+## 笔记总结
+
+eopl-impl/summary/*, 目前只看了前六章
+
+## 环境搭建
 
 macOS系统, IDE: vscode, Code runner插件
 
