@@ -11,7 +11,7 @@ What does a continuation represent?
 ---
 ch5的continuation可以重构之前第三章的LETREC语言或者第四章的IMPLICIT-REFS语言...改造的是value-of, 改成value-of/k
 
-> 使control context explicit. 从而利用我们去掌握continuation
+> 使control context explicit. 从而利于我们去掌握continuation
 
 ```scheme
 ch5.1的ch5/p154_continuation_passing_inter, 即书本上的例子, 基于第三章的letrec语言, 增加continuation
